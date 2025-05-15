@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 function Title() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0); 
 
   useEffect(() => {
     console.log("STATE CHANGES");
-    document.title = `COUNT IS ${count}`;
+    document.title = `COUNT IS ${count}`; // title of the       website changes everytime when count changes(side-effect)
   }, [count]);
 
   return (
