@@ -7,7 +7,7 @@ function Userlist() {
 
     useEffect(() => {
         fetch('https://jsonplaceholder.typicode.com/users')
-            .then(res => res.json()) // ✅ CALL the json() function
+            .then(res => res.json()) // CALL the json() function
             .then(data => {
                 setUsers(data);
                 setLoading(false);
