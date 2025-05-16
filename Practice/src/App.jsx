@@ -7,12 +7,13 @@ import Area from './components/calarea'
 import { Userdet } from './components/context'
 import Child from './components/child'
 import Rendercount from './components/rendercount'
+import Access from './components/accesDOM'
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <Rendercount />
+      <Access />
     </>
   )
 }

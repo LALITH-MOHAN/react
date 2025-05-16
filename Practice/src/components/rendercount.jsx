@@ -3,7 +3,7 @@ import React,{useEffect,useState,useRef} from "react";
 function Rendercount(){
     const[name,setname]=useState("");
     const render_c=useRef(0); //to count the renders
-    const [count,setCount]=useState(0);
+    
     useEffect(()=>{
         render_c.current=render_c.current+1
     }) // side effects occur for every render
