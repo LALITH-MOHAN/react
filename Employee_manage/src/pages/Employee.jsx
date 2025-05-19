@@ -1,7 +1,12 @@
-import React from 'react';
+import './Employee.css';
 
-function Employee() {
-  return <h1>EMPLOYEE MANAGEMENT PAGE!!</h1>;
-}
+const Employees = () => {
+  return (
+    <div className="employees-container">
+      <h1>Employee Management</h1>
+      <p>Here you can view, add, and manage employees.</p>
+    </div>
+  );
+};
 
-export default Employee;
+export default Employees;

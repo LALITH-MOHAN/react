@@ -1,0 +1,14 @@
+.home-container {
+    text-align: center;
+    padding: 40px;
+  }
+  
+  .home-container h1 {
+    color: #333;
+  }
+  
+  .home-container p {
+    font-size: 18px;
+    color: #555;
+  }
+  

@@ -1,0 +1,21 @@
+.navbar {
+    padding: 10px;
+    background:lightblue;
+  }
+  
+  .navbar a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bolder;
+  }
+  
+  .navbar a:hover {
+    text-decoration: underline;
+    color: blue;
+    
+  }
+  
+  .navbar{
+    text-align: right;
+  }
