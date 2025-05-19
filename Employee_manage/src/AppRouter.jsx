@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route,Link} from 'react-router-dom';
 import Home from './pages/Home';
-import Employee from './pages/Employee';
+import Employees from './pages/Employees';
 import './AppRouter.css'
 function AppRouter() {
   return (
@@ -11,7 +11,7 @@ function AppRouter() {
       </nav>
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/employees' element={<Employee />} />
+        <Route path='/employees' element={<Employees />} />
       </Routes>
     </BrowserRouter>
   );
