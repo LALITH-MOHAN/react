@@ -1,14 +1,17 @@
-import React from "react";
-import ClickButton from "./components/ClickButton";
-import withCounter from "./components/WithCOunter";
-
-const EnhancedClickButton = withCounter(ClickButton); //HOC which enchances Clickbutton component
+import React from 'react';
+import MouseTracker from './components/mousetracker';
 
 function App() {
   return (
     <div>
-      <h1>Higher Order Component</h1>
-      <EnhancedClickButton />
+      <h2>Render Props</h2>
+      <MouseTracker
+        render={({ x, y }) => (
+          <h3>
+            Mouse Position: ({x}, {y})
+          </h3>
+        )}
+      />
     </div>
   );
 }
