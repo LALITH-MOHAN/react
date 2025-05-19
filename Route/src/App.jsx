@@ -5,7 +5,6 @@ import Contact from "./Pages/contact";
 import Userprofile from "./Pages/Userprofle";
 
 
-// 👇 Lazy load About page with simulated 5s delay
 const About = lazy(() => import("./Pages/about"));
 
 function App() {
