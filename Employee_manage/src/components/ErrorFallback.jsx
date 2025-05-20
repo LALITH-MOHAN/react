@@ -8,6 +8,6 @@ function ErrorFallback({ error, resetErrorBoundary }) {
       </div>
     );
   }
-  
+
   export default ErrorFallback;
   
