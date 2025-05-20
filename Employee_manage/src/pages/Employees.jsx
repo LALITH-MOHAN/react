@@ -1,29 +1,40 @@
-import { lazy, Suspense } from 'react';
-import './Employee.css'
+import { lazy, Suspense, useState } from 'react';
+import './Employee.css';
+import { ErrorBoundary } from 'react-error-boundary';
+import ErrorFallback from '../components/ErrorFallback';
+
 const EmployeeList = lazy(() => import('../components/EmployeeList'));
-import { useState } from 'react';
+const EmployeeForm = lazy(() => import('../components/EmployeeForm'));
 
 function Employees() {
-  const handleLoadList = () => {
-    setShowList(true);
-  };
-
-  const [showList, setShowList] = useState(false);
+  const [activeComponent, setActiveComponent] = useState(null); // 'form' or 'list'
 
   return (
     <div>
       <h1>Manage Employees</h1>
-      {!showList && (
-        <button onClick={handleLoadList}>
-          Load Employee List
-        </button>
-      )}
+      <div className="button-group">
+        <button onClick={() => setActiveComponent('form')}>Load Employee Form</button>
+        <button onClick={() => setActiveComponent('list')}>Load Employee List</button>
+      </div>
 
-      {showList && (
-        <Suspense fallback={<p>Loading Employee List...</p>}>
-          <EmployeeList />
-        </Suspense>
-      )}
+      {/*ADDED ERROR BOUNDARIES FOR THE COMPONENT SO THAT IT WILL AFFECT THE FLOW OF THE APP*/}
+      <div className="component-display">
+        {activeComponent === 'form' && (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Suspense fallback={<p>Loading Employee Form...</p>}>
+              <EmployeeForm />
+            </Suspense>
+          </ErrorBoundary>
+        )}
+
+        {activeComponent === 'list' && (
+          <ErrorBoundary FallbackComponent={ErrorFallback}> 
+            <Suspense fallback={<p>Loading Employee List...</p>}>
+              <EmployeeList />
+            </Suspense>
+          </ErrorBoundary>
+        )}
+      </div>
     </div>
   );
 }
