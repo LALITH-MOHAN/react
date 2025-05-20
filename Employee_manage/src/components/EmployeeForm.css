@@ -1,0 +1,47 @@
+/* EmployeeForm.css */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  form div {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  button[type="submit"] {
+    align-self: flex-start;
+    padding: 10px 20px;
+    background-color: #388e3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #2e7d32;
+  }
+  
+  h2 {
+    color: #444;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  

@@ -1,14 +1,36 @@
-.employees-container {
-    padding: 40px;
-    text-align: center;
-  }
-  
-  .employees-container h1 {
-    color: #2c3e50;
-  }
-  
-  .employees-container p {
-    color: #777;
-    font-size: 16px;
-  }
-  
+body{
+  background-color: #bae0f1;
+}
+h1 {
+  text-align: center;
+  margin-top: 20px;
+  color: #1b204b;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.button-group button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.button-group button:hover {
+  background-color: #1565c0;
+}
+
+.component-display {
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+

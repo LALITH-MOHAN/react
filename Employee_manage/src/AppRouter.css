@@ -1,6 +1,6 @@
 .navbar {
     padding: 10px;
-    background:lightblue;
+    background:rgb(135, 144, 231);
   }
   
   .navbar a {
@@ -12,7 +12,7 @@
   
   .navbar a:hover {
     text-decoration: underline;
-    color: blue;
+    color: rgb(159, 222, 241);
     
   }
   

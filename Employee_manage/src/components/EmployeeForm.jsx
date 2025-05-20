@@ -1,6 +1,6 @@
 import { useState, useContext,Fragment} from 'react';
 import { EmployeeContext } from '../context/EmployeeContext';
-
+import './EmployeeForm.css';
 function EmployeeForm() {
   // Local state for the form inputs
   const [name, setName] = useState('');

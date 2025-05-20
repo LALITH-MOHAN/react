@@ -11,12 +11,13 @@ function Employees() {
 
   return (
     <div>
-      <h1>Manage Employees</h1>
-      <div className="button-group">
+      <div className='Topbtns'>
+       <h1>MANAGE EMPLOYEES</h1>
+       <div className="button-group">
         <button onClick={() => setActiveComponent('form')}>Load Employee Form</button>
         <button onClick={() => setActiveComponent('list')}>Load Employee List</button>
+       </div>
       </div>
-
       {/*ADDED ERROR BOUNDARIES FOR THE COMPONENT SO THAT IT WILL AFFECT THE FLOW OF THE APP*/}
       <div className="component-display">
         {activeComponent === 'form' && (
