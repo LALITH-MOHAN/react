@@ -2,7 +2,7 @@ import { lazy, Suspense, useState } from 'react';
 import './Employee.css';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from '../components/ErrorFallback';
-
+//Import dynamivally the component only when needed
 const EmployeeList = lazy(() => import('../components/EmployeeList'));
 const EmployeeForm = lazy(() => import('../components/EmployeeForm'));
 

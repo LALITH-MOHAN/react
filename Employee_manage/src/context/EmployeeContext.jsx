@@ -9,17 +9,17 @@ export function EmployeeProvider({children}){
         setemployees((prev)=>[...prev,employee]); //Add new employees
     }
 
-    function updateemployee(updatedemployee){
+    function updateEmployee(updatedemployee){
         setemployees((prev)=>prev.map((emp)=>(emp.id==updatedemployee.id?updatedemployee:emp)))
     }
 
     //delete employee
-    function removeemployee(id){
+    function removeEmployee(id){
         setemployees((prev)=>prev.filter((emp)=>id!=emp.id))
     }
 
     return(
-        <EmployeeContext.Provider value={{employees,addEmployee,updateemployee,removeemployee}}>
+        <EmployeeContext.Provider value={{employees,addEmployee,updateEmployee,removeEmployee}}>
             {children}
         </EmployeeContext.Provider>
     )
