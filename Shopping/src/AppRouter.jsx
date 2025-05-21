@@ -2,11 +2,12 @@ import { BrowserRouter, Route, Link, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
-import LoginPage from './pages/LoginPage'; // Add this
-import { useAuth } from './context/AuthContext'; // Add this
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage'; // Add this
+import { useAuth } from './context/AuthContext';
 
 function AppRouter() {
-  const { user, logout } = useAuth(); // Get auth state
+  const { user, logout } = useAuth();
 
   return (
     <BrowserRouter>
@@ -17,14 +18,18 @@ function AppRouter() {
         {user ? (
           <button onClick={logout}>Logout</button>
         ) : (
-          <Link to="/login">Login</Link>
+          <>
+            <Link to="/login">Login</Link> |{" "}
+            <Link to="/register">Register</Link> 
+          </>
         )}
       </nav>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/product" element={<ProductPage />} />
         <Route path="/cart" element={<CartPage />} />
-        <Route path="/login" element={<LoginPage />} /> {/* Add this route */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} /> 
       </Routes>
     </BrowserRouter>
   );

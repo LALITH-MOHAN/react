@@ -1,31 +1,40 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-function LoginPage() {
+function RegisterPage() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login } = useAuth(); 
+  const { register } = useAuth(); 
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (login(email, password)) 
-    {
-      navigate('/'); 
+    if (register(name, email, password)) {
+      alert('Registration successful! Please login.');
+      navigate('/login');
     } else {
-      setError('Invalid credentials');
+      setError('Registration failed. Email may already exist.');
     }
   };
 
   return (
     <div style={{ maxWidth: '400px', margin: 'auto' }}>
-      <h2>Login</h2>
+      <h2>Register</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
       <div>
+          <label>Name:</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
+        <div>
           <label>Email:</label>
           <input
             type="email"
@@ -43,9 +52,10 @@ function LoginPage() {
             required
           />
         </div>
-        <button type="submit">Login</button>      </form>
+        <button type="submit">Register</button>      
+    </form>
     </div>
   );
 }
 
-export default LoginPage;
+export default RegisterPage;
