@@ -1,10 +1,13 @@
 import { ProductProvider } from './context/ProductContext';
+import { CartProvider } from './context/CartContext';
 import AppRouter from './AppRouter';
 
 function App() {
   return (
     <ProductProvider>
-      <AppRouter />
+      <CartProvider>
+        <AppRouter />
+      </CartProvider>
     </ProductProvider>
   );
 }
