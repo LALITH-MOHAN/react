@@ -1,4 +1,3 @@
-// src/context/CartContext.jsx
 import { createContext, useContext, useState } from 'react';
 
 const CartContext = createContext();
@@ -35,7 +34,13 @@ export function CartProvider({ children }) {
 
   return (
     <CartContext.Provider
-      value={{ cartItems: cart, addToCart, removeFromCart, updateQuantity }}
+      value={{ 
+        cart, 
+        addToCart, 
+        removeFromCart, 
+        updateQuantity, 
+        setCart 
+      }}
     >
       {children}
     </CartContext.Provider>
@@ -43,5 +48,9 @@ export function CartProvider({ children }) {
 }
 
 export function useCart() {
-  return useContext(CartContext);
+  const context = useContext(CartContext);
+  if (!context) {
+    throw new Error('useCart must be used within a CartProvider');
+  }
+  return context;
 }

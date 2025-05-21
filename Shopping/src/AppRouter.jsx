@@ -7,9 +7,9 @@ function AppRouter() {
   return (
     <BrowserRouter>
       <nav style={{ marginBottom: 200 }}>
-        <Link to="/">HOME</Link> |{" "}
-        <Link to="/product">PRODUCT</Link>|{" "}
-        <Link to="/cart">CART</Link>
+       <Link to="/">HOME</Link> |{" "}
+       <Link to="/product">PRODUCT</Link> |{" "}
+       <Link to="/cart">CART</Link>
       </nav>
       <Routes>
         <Route path="/" element={<HomePage />} />
