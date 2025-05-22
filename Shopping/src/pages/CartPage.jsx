@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useOrder } from '../context/OrderContext';
+import '/home/user/Documents/react/Shopping/src/styles/CartPage.css';
 
 function CartPage() {
   const { cart, removeFromCart, updateQuantity, setCart } = useCart();
@@ -19,52 +20,55 @@ function CartPage() {
   };
 
   return (
-    <div>
-      <h2>Your Cart</h2>
+    <div className="cart-page">
+      <h2 className="cart-title">Your Cart</h2>
       {cart.length === 0 ? (
-        <p>Your cart is empty.</p>
+        <h1 className="empty-cart-message">Your cart is empty.</h1>
       ) : (
         <>
-          {cart.map((item) => (
-            <div key={item.id} style={{ marginBottom: '20px' }}>
-              <h4>{item.title}</h4>
-              <img src={item.thumbnail} alt={item.title} width={100} />
-              <p>Price: ₹{item.price}</p>
-              <p>
-                Quantity:
-                <input
-                  type="number"
-                  value={item.quantity}
-                  min="1"
-                  onChange={(e) =>
-                    updateQuantity(item.id, parseInt(e.target.value) || 1)
-                  }
+          <div className="cart-items">
+            {cart.map((item) => (
+              <div key={item.id} className="cart-item">
+                <h3 className="item-title">{item.title}</h3>
+                <img
+                  src={item.thumbnail}
+                  alt={item.title}
+                  className="item-thumbnail"
                 />
-              </p>
-              <button onClick={() => removeFromCart(item.id)}>Remove</button>
-            </div>
-          ))}
-          <h3>Total: ₹{total.toFixed(2)}</h3>
-          <button onClick={() => setShowConfirm(true)}>Checkout</button>
+                <p className="item-price">PRICE: ₹{item.price}</p>
+                <p className="item-quantity">
+                  QUANTITY: 
+                  <input
+                    type="number"
+                    value={item.quantity}
+                    min="1"
+                    onChange={(e) =>
+                      updateQuantity(item.id, parseInt(e.target.value) || 1)
+                    }
+                  />
+                </p>
+                <button
+                  className="remove-button"
+                  onClick={() => removeFromCart(item.id)}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+          <h3 className="total-amount">Total: ₹{total.toFixed(2)}</h3>
+          <button className="checkout-button" onClick={() => setShowConfirm(true)}>
+            Checkout
+          </button>
         </>
       )}
 
       {showConfirm && (
-        <div
-          style={{
-            position: 'fixed',
-            top: '30%',
-            left: '30%',
-            background: '#fff',
-            border: '1px solid #ccc',
-            padding: '20px',
-            zIndex: 1000,
-          }}
-        >
+        <div className="confirmation-popup">
           <h3>Confirm Your Order</h3>
           <p>Total Amount: ₹{total.toFixed(2)}</p>
-          <button onClick={handleCheckout}>Confirm</button>
-          <button onClick={() => setShowConfirm(false)}>Cancel</button>
+          <button className="confirm-button" onClick={handleCheckout}>Confirm</button>
+          <button className="cancel-button" onClick={() => setShowConfirm(false)}>Cancel</button>
         </div>
       )}
     </div>

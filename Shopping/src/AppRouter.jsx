@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Link, Routes } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import PrivateRoute from './components/PrivateRoute';
 import { useAuth } from './context/AuthContext';
-
+import '/home/user/Documents/react/Shopping/src/styles/NavBar.css'
 // Lazy loaded components
 const HomePage = lazy(() => import('./pages/HomePage'));
 const ProductPage = lazy(() => import('./pages/ProductPage'));
@@ -16,39 +16,29 @@ function AppRouter() {
 
   return (
     <BrowserRouter>
-      <nav style={{ 
-        marginBottom: '20px',
-        padding: '10px',
-        backgroundColor: '#f0f0f0',
-        borderRadius: '5px'
-      }}>
-        <Link to="/" style={{ marginRight: '10px' }}>Home</Link>
-        <Link to="/product" style={{ marginRight: '10px' }}>Products</Link>
-        <Link to="/cart" style={{ marginRight: '10px' }}>Cart</Link>
+      <nav className="navbar">
+        <Link to="/" className="nav-link">Home</Link>
+        <Link to="/product" className="nav-link">Products</Link>
+        <Link to="/cart" className="nav-link">Cart</Link>
         
         {user?.role === 'admin' && (
-          <Link to="/admin" style={{ marginRight: '10px' }}>Admin</Link>
+          <Link to="/admin" className="nav-link">Admin</Link>
         )}
         
         {user ? (
           <button 
             onClick={logout}
-            style={{
-              marginLeft: '10px',
-              padding: '5px 10px',
-              cursor: 'pointer'
-            }}
+            className="logout-btn"
           >
             Logout
           </button>
         ) : (
-          <>
-            <Link to="/login" style={{ marginRight: '10px' }}>Login</Link>
-            <Link to="/register">Register</Link>
-          </>
+          <div className="auth-links">
+            <Link to="/login" className="nav-link" id='login'>Login</Link>
+            <Link to="/register" className="nav-link" id='register'>Register</Link>
+          </div>
         )}
       </nav>
-
       <Suspense fallback={<h1>LOADING.....</h1>}>
         <Routes>
           <Route path="/" element={<HomePage />} />

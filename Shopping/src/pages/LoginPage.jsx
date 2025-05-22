@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-
+import '/home/user/Documents/react/Shopping/src/styles/LoginPage.css'
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,11 +21,12 @@ function LoginPage() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: 'auto' }}>
+    <div className='full'>
+    <div className="login-container">
       <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p>{error}</p>}
       <form onSubmit={handleSubmit}>
-      <div>
+        <div>
           <label>Email:</label>
           <input
             type="email"
@@ -43,7 +44,9 @@ function LoginPage() {
             required
           />
         </div>
-        <button type="submit">Login</button>      </form>
+        <button type="submit">Login</button>
+      </form>
+    </div>
     </div>
   );
 }

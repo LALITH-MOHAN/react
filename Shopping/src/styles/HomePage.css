@@ -1,0 +1,14 @@
+.home-container {
+    min-height: 100vh;
+    padding: 40px 20px;
+    background: linear-gradient(to bottom right, #fef9f9, #e0f7fa); /* Soft pleasant gradient */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .home-title {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }

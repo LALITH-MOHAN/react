@@ -4,7 +4,7 @@ import { useProducts } from '../context/ProductContext';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import ProductForm from './admin/ProductForm';
-
+import '/home/user/Documents/react/Shopping/src/styles/ProductCard.css'
 function ProductCard({ product }) {
   const { user } = useAuth();
   const { deleteProduct, updateProduct } = useProducts();
@@ -36,7 +36,7 @@ function ProductCard({ product }) {
 
   if (isEditing) {
     return (
-      <div style={{ border: '1px solid #ddd', padding: '15px', margin: '10px' }}>
+      <div className="product-card edit-mode" id={`product-${product.id}`}>
         <ProductForm 
           product={product}
           onSubmit={handleSave}
@@ -47,18 +47,37 @@ function ProductCard({ product }) {
   }
 
   return (
-    <div style={{ border: '1px solid #ddd', padding: '15px', margin: '10px' }}>
-      <img src={product.thumbnail} alt={product.title} style={{ width: '100%', height: '150px' }} />
-      <h3>{product.title}</h3>
-      <p>${product.price}</p>
-      <p>Stock: {product.stock}</p>
+    <div className="product-card" id={`product-${product.id}`}>
+      <img
+        src={product.thumbnail}
+        alt={product.title}
+        className="product-image"
+      />
+      <h3 className="product-title">{product.title}</h3>
+      <p className="product-price">${product.price}</p>
+      <p className="product-stock">Stock: {product.stock}</p>
 
-      <button onClick={handleAddToCart}>Add to Cart</button>
+      <button
+        className="product-btn add-to-cart-btn"
+        onClick={handleAddToCart}
+      >
+        Add to Cart
+      </button>
 
       {user?.role === 'admin' && (
         <>
-          <button onClick={handleDelete}>Delete</button>
-          <button onClick={handleEdit}>Edit</button>
+          <button
+            className="product-btn delete-btn"
+            onClick={handleDelete}
+          >
+            Delete
+          </button>
+          <button
+            className="product-btn edit-btn"
+            onClick={handleEdit}
+          >
+            Edit
+          </button>
         </>
       )}
     </div>

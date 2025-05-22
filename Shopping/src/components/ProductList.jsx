@@ -4,15 +4,16 @@ import { useCart } from '../context/CartContext';
 import ProductCard from './ProductCard';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from './ErrorFallback';
+import '../styles/ProductList.css'; // adjust the path if needed
 
 function ProductList() {
   const { products } = useProducts();
   const { addToCart } = useCart();
 
   return (
-    <div>
-      <h2>All Products</h2>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+    <div className="product-list-container">
+      <h2 className="product-list-title">PRODUCTS</h2>
+      <div className="product-grid">
         {products.map((product) => (
           <ErrorBoundary
             key={product.id}

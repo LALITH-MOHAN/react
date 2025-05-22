@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-
+import '/home/user/Documents/react/Shopping/src/styles/ResgisterPage.css'
 function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -21,7 +21,8 @@ function RegisterPage() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: 'auto' }}>
+    <div className='full'>
+      <div className="register-container">
       <h2>Register</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
@@ -54,6 +55,7 @@ function RegisterPage() {
         </div>
         <button type="submit">Register</button>      
     </form>
+    </div>
     </div>
   );
 }

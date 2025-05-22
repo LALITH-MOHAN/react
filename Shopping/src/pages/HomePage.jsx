@@ -1,9 +1,9 @@
 import React from 'react'
-
+import '/home/user/Documents/react/Shopping/src/styles/HomePage.css'
 function HomePage() {
   return (
-    <div> 
-        <h1>WELCOME TO HomePage</h1>
+    <div className='home-container'> 
+        <h1 className='home-title'>WELCOME TO SHOPPY MART</h1>
     </div>
   )
 }
