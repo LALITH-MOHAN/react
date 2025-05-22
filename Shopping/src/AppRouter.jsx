@@ -56,13 +56,13 @@ function AppRouter() {
         
         {/* Protected Admin Route */}
         <Route 
-          path="/admin" 
-          element={
-            <PrivateRoute requiredRole="admin">
-              <AdminPage />
-            </PrivateRoute>
-          } 
-        />
+  path="/admin" 
+  element={
+    <PrivateRoute requiredRole="admin">
+      <AdminPage />
+    </PrivateRoute>
+  } 
+/>
       </Routes>
     </BrowserRouter>
   );
