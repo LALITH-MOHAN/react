@@ -14,12 +14,7 @@ export function ProductProvider({ children }) {
       try {
         const response = await fetch('https://dummyjson.com/products');
         const data = await response.json();
-        setProducts(data.products.map(p => ({
-          ...p,
-          // Convert API fields to match our form
-          sku: p.id.toString(),
-          stock: p.stock
-        })));
+        setProducts(data.products.map(p => ({...p,sku: p.id.toString(),stock: p.stock})));
       } catch (err) {
         setError(err.message);
         console.error("Failed to fetch products:", err);

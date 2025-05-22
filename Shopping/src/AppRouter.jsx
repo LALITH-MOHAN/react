@@ -1,12 +1,15 @@
 import { BrowserRouter, Route, Link, Routes } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import ProductPage from './pages/ProductPage';
-import CartPage from './pages/CartPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import AdminPage from './pages/AdminPage';
+import { Suspense, lazy } from 'react';
 import PrivateRoute from './components/PrivateRoute';
 import { useAuth } from './context/AuthContext';
+
+// Lazy loaded components
+const HomePage = lazy(() => import('./pages/HomePage'));
+const ProductPage = lazy(() => import('./pages/ProductPage'));
+const CartPage = lazy(() => import('./pages/CartPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+const AdminPage = lazy(() => import('./pages/AdminPage'));
 
 function AppRouter() {
   const { user, logout } = useAuth();
@@ -23,7 +26,6 @@ function AppRouter() {
         <Link to="/product" style={{ marginRight: '10px' }}>Products</Link>
         <Link to="/cart" style={{ marginRight: '10px' }}>Cart</Link>
         
-        {/* Show Admin link only for admin users */}
         {user?.role === 'admin' && (
           <Link to="/admin" style={{ marginRight: '10px' }}>Admin</Link>
         )}
@@ -47,23 +49,23 @@ function AppRouter() {
         )}
       </nav>
 
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/product" element={<ProductPage />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        
-        {/* Protected Admin Route */}
-        <Route 
-  path="/admin" 
-  element={
-    <PrivateRoute requiredRole="admin">
-      <AdminPage />
-    </PrivateRoute>
-  } 
-/>
-      </Routes>
+      <Suspense fallback={<h1>LOADING.....</h1>}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/product" element={<ProductPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route 
+            path="/admin" 
+            element={
+              <PrivateRoute requiredRole="admin">
+                <AdminPage />
+              </PrivateRoute>
+            } 
+          />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }
