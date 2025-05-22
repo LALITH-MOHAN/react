@@ -7,10 +7,9 @@ function ProductCard({ product, onAddToCart }) {
 
   const handleAddToCart = () => {
     if (!user) {
-      alert('Please login to add items to your cart!');
-      navigate('/login'); // Redirect to login page
+      navigate('/login');
     } else {
-      onAddToCart(product); // Proceed if logged in
+      onAddToCart(product); 
     }
   };
 
