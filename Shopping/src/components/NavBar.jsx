@@ -5,15 +5,14 @@ import '/home/user/Documents/react/Shopping/src/styles/NavBar.css';
 function NavBar({ user, logout }) {
   const navigate = useNavigate();
 
-  const handleCartClick = (e) => {
-    e.preventDefault();
-    if (user) {
+  const handleCartClick = (e) => {e.preventDefault();
+    if (user) 
+    {
       navigate("/cart");
-    } else {
+    } else 
+    {
       navigate("/login");
-    }
-  };
-
+    }};
   return (
     <nav className="navbar">
       <Link to="/" className="nav-link" title="Products">
@@ -49,5 +48,4 @@ function NavBar({ user, logout }) {
     </nav>
   );
 }
-
 export default NavBar;

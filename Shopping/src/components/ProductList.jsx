@@ -1,20 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useProducts } from '../context/ProductContext';
 import { useCart } from '../context/CartContext';
 import ProductCard from './ProductCard';
+import Pagination from './Pagination';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from './ErrorFallback';
-import '../styles/ProductList.css'; // adjust the path if needed
+import '../styles/ProductList.css';
 
 function ProductList() {
   const { products } = useProducts();
   const { addToCart } = useCart();
 
+  const itemsPerPage = 30;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
+
   return (
     <div className="product-list-container">
       <h2 className="product-list-title">PRODUCTS</h2>
       <div className="product-grid">
-        {products.map((product) => (
+        {currentItems.map((product) => (
           <ErrorBoundary
             key={product.id}
             FallbackComponent={ErrorFallback}
@@ -24,6 +32,13 @@ function ProductList() {
           </ErrorBoundary>
         ))}
       </div>
+
+      <Pagination
+        totalPosts={products.length}
+        postsPerPage={itemsPerPage}
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
+      />
     </div>
   );
 }

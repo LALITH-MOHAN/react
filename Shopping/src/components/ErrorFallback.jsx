@@ -1,4 +1,3 @@
-// src/components/ErrorFallback.jsx
 import React from 'react';
 
 function ErrorFallback({ error, resetErrorBoundary }) {
