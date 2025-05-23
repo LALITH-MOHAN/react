@@ -10,7 +10,7 @@
   }
   
   .product-card:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
   }
   
   .product-card img {
@@ -65,5 +65,11 @@
   
   .product-card button:nth-of-type(3):hover {
     background-color: #13e000;
+  }
+  
+  .add-to-cart-btn.added {
+    background-color: #4caf50;
+    color: white;
+    transition: background-color 0.3s ease;
   }
   

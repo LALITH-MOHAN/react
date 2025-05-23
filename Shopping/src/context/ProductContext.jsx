@@ -64,6 +64,16 @@ export function ProductProvider({ children }) {
     return true;
   };
 
+  const adjustStock = (id, amount) => {
+    setProducts(prev =>
+      prev.map(product =>
+        product.id === id
+          ? { ...product, stock: Math.max(product.stock + amount, 0) }
+          : product
+      )
+    );
+  };
+
   return (
     <ProductContext.Provider value={{ 
       products,
@@ -71,7 +81,8 @@ export function ProductProvider({ children }) {
       error,
       addProduct,
       updateProduct,
-      deleteProduct
+      deleteProduct,
+      adjustStock
     }}>
       {children}
     </ProductContext.Provider>

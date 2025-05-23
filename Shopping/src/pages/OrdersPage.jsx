@@ -1,27 +1,58 @@
-import React from 'react';
 import { useOrders } from '../context/OrderContext';
-
+import { useAuth } from '../context/AuthContext';
+import '/home/user/Documents/react/Shopping/src/styles/OrderPage.css'
 function OrdersPage() {
   const { orders } = useOrders();
+  const { user } = useAuth();
+
+  // Safely filter orders
+  const userOrders = Array.isArray(orders) 
+    ? orders.filter(order => order?.userId === user?.id)
+    : [];
+
+  // Helper function to safely display order ID
+  const displayOrderId = (id) => {
+    if (typeof id === 'string' || typeof id === 'number') {
+      return id;
+    }
+    try {
+      return JSON.stringify(id);
+    } catch {
+      return 'N/A';
+    }
+  };
 
   return (
-    <div>
-      <h2>All Orders</h2>
-      {orders.map((order) => (
-        <div key={order.id} style={{ marginBottom: '20px', border: '1px solid #ccc', padding: '10px' }}>
-          <p><strong>Order ID:</strong> {order.id}</p>
-          <p><strong>Timestamp:</strong> {order.timestamp}</p>
-          <p><strong>Customer:</strong> {order.customer}</p>
-          <ul>
-            {order.products.map((prod) => (
-              <li key={prod.id}>
-                {prod.title} - {prod.quantity} x ${prod.price}
-              </li>
-            ))}
-          </ul>
-          <strong>Total: ${order.totalAmount.toFixed(2)}</strong>
+    <div className='full'>
+    <div className="orders-page">
+      <h2>Your Orders</h2>
+      
+      {userOrders.length === 0 ? (
+        <p className="no-orders">You haven't placed any orders yet.</p>
+      ) : (
+        <div className="orders-list">
+          {userOrders.map(order => {
+            const orderId = displayOrderId(order.id);
+            const orderDate = order.date 
+              ? new Date(order.date).toLocaleString() 
+              : 'Date not available';
+            const orderTotal = order.total 
+              ? `$${order.total.toFixed(2)}` 
+              : '$0.00';
+            const orderStatus = order.status || 'Status unknown';
+
+            return (
+              <div key={orderId} className="order-card">
+                <h3>Order #{orderId}</h3>
+                <p><strong>Date:</strong> {orderDate}</p>
+                <p><strong>Total:</strong> {orderTotal}</p>
+                <p><strong>Status:</strong> {orderStatus}</p>
+              </div>
+            );
+          })}
         </div>
-      ))}
+      )}
+    </div>
     </div>
   );
 }

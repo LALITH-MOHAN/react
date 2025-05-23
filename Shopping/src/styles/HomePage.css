@@ -12,3 +12,10 @@
     font-size: 2.5rem;
     margin-bottom: 1rem;
   }
+  .nav-img {
+    width: 32px; /* or 24px or any size you prefer */
+    height: 32px;
+    object-fit: contain;
+    margin-right: 10px;
+  }
+  

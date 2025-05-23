@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { useOrder } from '../context/OrderContext';
-import '/home/user/Documents/react/Shopping/src/styles/CartPage.css';
+import { useOrders } from '../context/OrderContext';
+import { useAuth } from '../context/AuthContext';
+import '../styles/CartPage.css'; // Updated import path
 
 function CartPage() {
-  const { cart, removeFromCart, updateQuantity, setCart } = useCart();
-  const { placeOrder } = useOrder();
+  const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
+  const { placeOrder } = useOrders();
+  const { user } = useAuth();
   const [showConfirm, setShowConfirm] = useState(false);
 
   const total = cart.length > 0
@@ -13,10 +15,11 @@ function CartPage() {
     : 0;
 
   const handleCheckout = () => {
-    const order = placeOrder(cart, 'Customer1');
-    setCart([]);
+    if (!user) return;
+    const order = placeOrder(cart, user.id);
+    clearCart();
     setShowConfirm(false);
-    alert(`Order Placed! Order ID: ${order.id}`);
+    alert(`Order #${order.id} placed successfully!`);
   };
 
   return (
@@ -45,6 +48,7 @@ function CartPage() {
                     onChange={(e) =>
                       updateQuantity(item.id, parseInt(e.target.value) || 1)
                     }
+                    className="quantity-input"
                   />
                 </p>
                 <button
@@ -57,8 +61,12 @@ function CartPage() {
             ))}
           </div>
           <h3 className="total-amount">Total: ₹{total.toFixed(2)}</h3>
-          <button className="checkout-button" onClick={() => setShowConfirm(true)}>
-            Checkout
+          <button 
+            className="checkout-button" 
+            onClick={() => setShowConfirm(true)}
+            disabled={!user}
+          >
+            {user ? 'Checkout' : 'Login to Checkout'}
           </button>
         </>
       )}
@@ -67,8 +75,10 @@ function CartPage() {
         <div className="confirmation-popup">
           <h3>Confirm Your Order</h3>
           <p>Total Amount: ₹{total.toFixed(2)}</p>
-          <button className="confirm-button" onClick={handleCheckout}>Confirm</button>
-          <button className="cancel-button" onClick={() => setShowConfirm(false)}>Cancel</button>
+          <div className="confirmation-buttons">
+            <button className="confirm-button" onClick={handleCheckout}>Confirm</button>
+            <button className="cancel-button" onClick={() => setShowConfirm(false)}>Cancel</button>
+          </div>
         </div>
       )}
     </div>

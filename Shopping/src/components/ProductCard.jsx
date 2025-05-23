@@ -4,20 +4,24 @@ import { useProducts } from '../context/ProductContext';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import ProductForm from './admin/ProductForm';
-import '/home/user/Documents/react/Shopping/src/styles/ProductCard.css'
+import '/home/user/Documents/react/Shopping/src/styles/ProductCard.css';
+
 function ProductCard({ product }) {
   const { user } = useAuth();
   const { deleteProduct, updateProduct } = useProducts();
   const { addToCart } = useCart();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
+  const [clicked, setClicked] = useState(false);
 
   const handleAddToCart = () => {
     if (!user) {
       navigate('/login');
       return;
     }
-    addToCart({ ...product, quantity: 1 });
+    addToCart(product);
+    setClicked(true);
+    setTimeout(() => setClicked(false), 500);
   };
 
   const handleDelete = () => {
@@ -58,10 +62,11 @@ function ProductCard({ product }) {
       <p className="product-stock">Stock: {product.stock}</p>
 
       <button
-        className="product-btn add-to-cart-btn"
+        className={`product-btn add-to-cart-btn ${clicked ? 'clicked' : ''}`}
         onClick={handleAddToCart}
+        disabled={product.stock <= 0}
       >
-        Add to Cart
+        {product.stock <= 0 ? 'Out of Stock' : clicked ? 'Added!' : 'Add to Cart'}
       </button>
 
       {user?.role === 'admin' && (

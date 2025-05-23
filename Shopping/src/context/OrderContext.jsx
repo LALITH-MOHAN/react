@@ -1,4 +1,3 @@
-// src/context/OrderContext.jsx
 import { createContext, useContext, useState } from 'react';
 
 const OrderContext = createContext();
@@ -6,25 +5,17 @@ const OrderContext = createContext();
 export function OrderProvider({ children }) {
   const [orders, setOrders] = useState([]);
 
-  const placeOrder = (cartItems, customer = 'Guest') => {
-    const timestamp = new Date().toISOString();
-    const total = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    const orderId = Date.now();
-
-    const order = {
-      id: orderId,
-      items: cartItems.map(item => ({
-        title: item.title,
-        quantity: item.quantity,
-        price: item.price,
-      })),
-      total,
-      timestamp,
-      customer,
+  const placeOrder = (cartItems, userId) => {
+    const newOrder = {
+      id: Date.now(),
+      items: cartItems,
+      total: cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+      userId,
+      date: new Date().toISOString(),
+      status: 'pending'
     };
-
-    setOrders((prev) => [...prev, order]);
-    return order;
+    setOrders(prev => [...prev, newOrder]);
+    return newOrder;
   };
 
   return (
@@ -34,6 +25,6 @@ export function OrderProvider({ children }) {
   );
 }
 
-export function useOrder() {
+export function useOrders() {
   return useContext(OrderContext);
 }

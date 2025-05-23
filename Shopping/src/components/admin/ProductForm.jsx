@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import '/home/user/Documents/react/Shopping/src/styles/ProductForm.css'
 function ProductForm({ product = null, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
     title: product?.title || '',
@@ -24,7 +24,7 @@ function ProductForm({ product = null, onSubmit, onCancel }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="product-form" onSubmit={handleSubmit}>
       <div>
         <label>Product Title:</label>
         <input
