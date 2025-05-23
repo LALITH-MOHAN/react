@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useOrders } from '../context/OrderContext';
 import { useAuth } from '../context/AuthContext';
-import '../styles/CartPage.css'; // Updated import path
+import '../styles/CartPage.css';
 
 function CartPage() {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
@@ -17,7 +17,7 @@ function CartPage() {
   const handleCheckout = () => {
     if (!user) return;
     const order = placeOrder(cart, user.id);
-    clearCart();
+    clearCart(false); // ✅ Prevent restoring stock after order placement
     setShowConfirm(false);
     alert(`Order #${order.id} placed successfully!`);
   };

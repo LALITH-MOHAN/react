@@ -13,15 +13,26 @@ function ProductCard({ product }) {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [clicked, setClicked] = useState(false);
+  const [adding, setAdding] = useState(false);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!user) {
       navigate('/login');
       return;
     }
-    addToCart(product);
-    setClicked(true);
-    setTimeout(() => setClicked(false), 500);
+    
+    if (adding) return;
+    setAdding(true);
+    
+    try {
+      const success = await addToCart(product);
+      if (success) {
+        setClicked(true);
+        setTimeout(() => setClicked(false), 500);
+      }
+    } finally {
+      setAdding(false);
+    }
   };
 
   const handleDelete = () => {
@@ -64,9 +75,11 @@ function ProductCard({ product }) {
       <button
         className={`product-btn add-to-cart-btn ${clicked ? 'clicked' : ''}`}
         onClick={handleAddToCart}
-        disabled={product.stock <= 0}
+        disabled={product.stock <= 0 || adding}
       >
-        {product.stock <= 0 ? 'Out of Stock' : clicked ? 'Added!' : 'Add to Cart'}
+        {product.stock <= 0 ? 'Out of Stock' : 
+         clicked ? 'Added!' : 
+         adding ? 'Adding...' : 'Add to Cart'}
       </button>
 
       {user?.role === 'admin' && (

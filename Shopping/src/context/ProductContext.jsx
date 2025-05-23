@@ -14,7 +14,11 @@ export function ProductProvider({ children }) {
       try {
         const response = await fetch('https://dummyjson.com/products');
         const data = await response.json();
-        setProducts(data.products.map(p => ({...p,sku: p.id.toString(),stock: p.stock})));
+        setProducts(data.products.map(p => ({
+          ...p,
+          sku: p.id.toString(),
+          stock: p.stock
+        })));
       } catch (err) {
         setError(err.message);
         console.error("Failed to fetch products:", err);
@@ -68,7 +72,11 @@ export function ProductProvider({ children }) {
     setProducts(prev =>
       prev.map(product =>
         product.id === id
-          ? { ...product, stock: Math.max(product.stock + amount, 0) }
+          ? { 
+              ...product, 
+              stock: Math.max(0, product.stock + amount),
+              updatedAt: new Date().toISOString()
+            }
           : product
       )
     );
