@@ -1,0 +1,26 @@
+.filter-page {
+    padding: 20px;
+  }
+  
+  .category-title {
+    text-align: center;
+    margin-bottom: 20px;
+    text-transform: capitalize;
+  }
+  
+  .filtered-products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .loading, .error {
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2rem;
+  }
+  
+  .error {
+    color: red;
+  }

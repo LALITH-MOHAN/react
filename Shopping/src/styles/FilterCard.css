@@ -1,0 +1,67 @@
+.filter-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    background: white;
+  }
+  
+  .filter-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .filter-image {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .filter-title {
+    font-size: 1rem;
+    margin: 10px 0;
+    color: #333;
+  }
+  
+  .filter-price {
+    font-weight: bold;
+    color: #2a6496;
+    margin: 5px 0;
+  }
+  
+  .filter-stock, .filter-category {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 5px 0;
+  }
+  
+  .filter-btn {
+    padding: 8px 15px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  
+  .add-to-cart-btn {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .add-to-cart-btn:hover:not(:disabled) {
+    background-color: #45a049;
+  }
+  
+  .add-to-cart-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .add-to-cart-btn.clicked {
+    background-color: #2E7D32;
+  }

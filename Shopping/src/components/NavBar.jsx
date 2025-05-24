@@ -1,11 +1,18 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { FaBoxOpen, FaShoppingCart, FaShippingFast, FaUserShield, FaSignOutAlt, FaSignInAlt, FaUserPlus } from "react-icons/fa";
+import { FaBoxOpen, FaShoppingCart, FaShippingFast, FaUserShield, FaSignOutAlt, FaSignInAlt, FaUserPlus, FaFilter } from "react-icons/fa";
 import '/home/user/Documents/react/Shopping/src/styles/NavBar.css';
-import { useCart } from '../context/CartContext'; // ✅ Import CartContext
+import { useCart } from '../context/CartContext'; 
+import { useState } from 'react';
+import { useProducts } from '../context/ProductContext';
 
 function NavBar({ user, logout }) {
   const navigate = useNavigate();
-  const { cart } = useCart(); // ✅ Get cart from context
+  const { cart } = useCart();
+  const { products } = useProducts();
+  const [showCategories, setShowCategories] = useState(false);
+
+  // Get unique categories from products
+  const categories = [...new Set(products.map(product => product.category))];
 
   const handleCartClick = (e) => {
     e.preventDefault();
@@ -16,7 +23,11 @@ function NavBar({ user, logout }) {
     }
   };
 
-  // ✅ Calculate total quantity
+  const handleCategoryClick = (category) => {
+    navigate(`/filter/${encodeURIComponent(category)}`);
+    setShowCategories(false);
+  };
+
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
@@ -25,7 +36,29 @@ function NavBar({ user, logout }) {
         <FaBoxOpen size={33} />
       </Link>
 
-      {/* ✅ Cart with item count badge */}
+      <div 
+        className="filter-container"
+        onMouseEnter={() => setShowCategories(true)}
+        onMouseLeave={() => setShowCategories(false)}
+      >
+        <button className="nav-link" title="Filter by Category">
+          <FaFilter size={30} />
+        </button>
+        {showCategories && (
+          <div className="categories-dropdown">
+            {categories.map(category => (
+              <button 
+                key={category} 
+                className="category-item"
+                onClick={() => handleCategoryClick(category)}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
       <a href="/cart" className="nav-link cart-icon" title="My-Cart" onClick={handleCartClick}>
         <FaShoppingCart size={30} />
         {cartItemCount > 0 && (
