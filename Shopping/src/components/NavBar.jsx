@@ -8,11 +8,16 @@ import { useProducts } from '../context/ProductContext';
 function NavBar({ user, logout }) {
   const navigate = useNavigate();
   const { cart } = useCart();
-  const { products } = useProducts();
+  const { products, localProducts } = useProducts();
   const [showCategories, setShowCategories] = useState(false);
 
-  // Get unique categories from products
-  const categories = [...new Set(products.map(product => product.category))];
+  // Get unique categories from both API and local products
+  const allCategories = [
+    ...new Set([
+      ...products.map(p => p.category),
+      ...localProducts.map(p => p.category)
+    ])
+  ].filter(Boolean).sort();
 
   const handleCartClick = (e) => {
     e.preventDefault();
@@ -46,7 +51,7 @@ function NavBar({ user, logout }) {
         </button>
         {showCategories && (
           <div className="categories-dropdown">
-            {categories.map(category => (
+            {allCategories.map(category => (
               <button 
                 key={category} 
                 className="category-item"
