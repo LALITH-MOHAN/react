@@ -12,7 +12,7 @@ function LoginPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (login(email, password)) 
+    if (login(email, password)) //checks if the credentials are registered already
     {
       navigate('/'); 
     } else {
@@ -23,26 +23,15 @@ function LoginPage() {
   return (
     <div className='full'>
     <div className="login-container">
-      <h2>Login</h2>
       {error && <p>{error}</p>}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
         </div>
         <div>
           <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
         </div>
         <button type="submit">Login</button>
       </form>

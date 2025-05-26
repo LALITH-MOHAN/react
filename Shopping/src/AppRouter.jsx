@@ -3,7 +3,7 @@ import { Suspense, lazy } from 'react';
 import PrivateRoute from './components/PrivateRoute';
 import { useAuth } from './context/AuthContext';
 import NavBar from './components/NavBar';
-import Footer from './components/Footer'; // New Footer component
+import Footer from './components/Footer'; 
 
 // Lazy loaded components
 const ProductPage = lazy(() => import('./pages/ProductPage'));
@@ -13,8 +13,8 @@ const RegisterPage = lazy(() => import('./pages/RegisterPage'));
 const AdminPage = lazy(() => import('./pages/AdminPage'));
 const OrdersPage = lazy(() => import('./pages/OrdersPage'));
 const FilterPage = lazy(() => import('./pages/FilterPage'));
-const AboutUsPage = lazy(() => import('./pages/AboutUsPage')); // New
-const ContactUsPage = lazy(() => import('./pages/ContactUsPage')); // New
+const AboutUsPage = lazy(() => import('./pages/AboutUsPage')); 
+const ContactUsPage = lazy(() => import('./pages/ContactUsPage'));
 
 function AppRouter() {
   const { user, logout } = useAuth();

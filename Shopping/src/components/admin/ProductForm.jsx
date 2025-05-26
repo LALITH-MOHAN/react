@@ -14,16 +14,15 @@ function ProductForm({ product = null, onSubmit, onCancel }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitStatus('adding');
-    
+
     await onSubmit({
       title: formData.title,
       price: Number(formData.price),
       stock: Number(formData.stock),
       category: formData.category,
-      thumbnail: formData.thumbnail
+      thumbnail: formData.thumbnail // base64 image string
     });
 
-    // Only clear if not editing an existing product
     if (!product) {
       setFormData({
         title: '',
@@ -39,8 +38,18 @@ function ProductForm({ product = null, onSubmit, onCancel }) {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, files } = e.target;
+
+    if (name === 'thumbnail' && files && files[0]) {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({ ...prev, thumbnail: reader.result }));
+      };
+      reader.readAsDataURL(file); // converts image to base64
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const getButtonText = () => {
@@ -53,64 +62,37 @@ function ProductForm({ product = null, onSubmit, onCancel }) {
     <form className="product-form" onSubmit={handleSubmit}>
       <div className="form-group">
         <label>Product Title:</label>
-        <input
-          type="text"
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-          required
-        />
+        <input type="text" name="title" value={formData.title} onChange={handleChange} required />
       </div>
 
       <div className="form-group">
         <label>Price:</label>
-        <input
-          type="number"
-          name="price"
-          value={formData.price}
-          onChange={handleChange}
-          min="0"
-          step="0.01"
-          required
-        />
+        <input type="number" name="price" value={formData.price} onChange={handleChange} min="0" step="0.01" required />
       </div>
 
       <div className="form-group">
         <label>Stock:</label>
-        <input
-          type="number"
-          name="stock"
-          value={formData.stock}
-          onChange={handleChange}
-          min="0"
-          required
-        />
+        <input type="number" name="stock" value={formData.stock} onChange={handleChange} min="0" required />
       </div>
 
       <div className="form-group">
         <label>Category:</label>
-        <input
-          type="text"
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          required
-        />
+        <input type="text" name="category" value={formData.category} onChange={handleChange} required />
       </div>
 
       <div className="form-group">
-        <label>Image URL:</label>
-        <input
-          type="url"
-          name="thumbnail"
-          value={formData.thumbnail}
-          onChange={handleChange}
-        />
+        <label>Product Image:</label>
+        <input type="file" name="thumbnail" accept="image/*" onChange={handleChange} />
+        {formData.thumbnail && (
+          <div className="image-preview">
+            <img src={formData.thumbnail} alt="Preview" style={{ maxWidth: '150px', marginTop: '10px' }} />
+          </div>
+        )}
       </div>
 
       <div className="form-buttons">
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className={`submit-btn ${submitStatus === 'added' ? 'added' : ''}`}
           disabled={submitStatus === 'adding'}
         >

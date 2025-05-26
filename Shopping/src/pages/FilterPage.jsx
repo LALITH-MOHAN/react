@@ -16,12 +16,10 @@ function FilterPage() {
       try {
         setLoading(true);
         
-        // Filter local products first
         const localFiltered = localProducts.filter(
           p => p.category.toLowerCase() === category.toLowerCase()
         );
         
-        // Then fetch from API
         let apiFiltered = [];
         try {
           const response = await fetch(`https://dummyjson.com/products/category/${category}`);

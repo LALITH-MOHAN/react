@@ -6,7 +6,6 @@ import '/home/user/Documents/react/Shopping/src/styles/ProductPage.css'
 function ProductPage() {
   return (
     <div className='product-page'>
-      <h1>WELCOME TO PRODUCT PAGE!!</h1>
       <ErrorBoundary fallback={ErrorFallback}>
       <ProductList />
       </ErrorBoundary>

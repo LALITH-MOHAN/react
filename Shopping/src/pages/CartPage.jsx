@@ -17,7 +17,7 @@ function CartPage() {
   const handleCheckout = () => {
     if (!user) return;
     const order = placeOrder(cart, user.id);
-    clearCart(false); // ✅ Prevent restoring stock after order placement
+    clearCart(false);
     setShowConfirm(false);
     alert(`Order #${order.id} placed successfully!`);
   };
@@ -38,23 +38,15 @@ function CartPage() {
                   alt={item.title}
                   className="item-thumbnail"
                 />
-                <p className="item-price">PRICE: ₹{item.price}</p>
+                <p className="item-price">PRICE: ${item.price}</p>
                 <p className="item-quantity">
                   QUANTITY: 
-                  <input
-                    type="number"
-                    value={item.quantity}
-                    min="1"
+                  <input type="number" value={item.quantity} min="1"
                     onChange={(e) =>
                       updateQuantity(item.id, parseInt(e.target.value) || 1)
-                    }
-                    className="quantity-input"
-                  />
+                    } className="quantity-input"/>
                 </p>
-                <button
-                  className="remove-button"
-                  onClick={() => removeFromCart(item.id)}
-                >
+                <button className="remove-button" onClick={() => removeFromCart(item.id)}>
                   Remove
                 </button>
               </div>

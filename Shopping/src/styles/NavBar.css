@@ -47,11 +47,28 @@
   #login:hover{
     background-color: green;
     color: #0c0a0a;
+    transform: scale(1.1);
   }
 
   #register:hover{
     background-color: yellow;
     color: #0c0a0a;
+    transform: scale(1.1);
+  }
+  #home:hover{
+    transform: scale(1.1);
+  }
+  #filter:hover{
+    transform: scale(1.1);
+  }
+  #cart:hover{
+    transform: scale(1.1);
+  }
+  #order:hover{
+    transform: scale(1.1);
+  }
+  #admin:hover{
+    transform: scale(1.1);
   }
 
   .cart-icon {
@@ -69,7 +86,6 @@
     border-radius: 50%;
   }
 
-  /* Dropdown styles */
 .filter-dropdown {
   position: relative;
   cursor: pointer;
@@ -97,6 +113,7 @@
 
 .dropdown-item:hover {
   background-color: #f0f0f0;
+  font-weight: bolder;
 }
 .filter-container {
   position: relative;
@@ -123,8 +140,12 @@
   background: none;
   border: none;
   cursor: pointer;
+  font-weight: bold;
 }
 
 .category-item:hover {
-  background-color: #f5f5f5;
+  background-color: #1a1818;
+  color: white;
+  font-weight: bolder;
+  transform: scale(1.05);
 }

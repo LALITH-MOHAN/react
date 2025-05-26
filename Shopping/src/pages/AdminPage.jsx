@@ -17,8 +17,7 @@ function AdminPage() {
   return (
     <div className='full'>
       <div className="admin-container">
-        <h1>Admin Dashboard</h1>
-        <h2>Add New Product</h2>
+        <h2>Add New Product Details</h2>
         <ProductForm onSubmit={addProduct} />
       </div>
     </div>

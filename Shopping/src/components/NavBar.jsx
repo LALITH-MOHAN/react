@@ -10,24 +10,8 @@ function NavBar({ user, logout }) {
   const { cart } = useCart();
   const { products, localProducts } = useProducts();
   const [showCategories, setShowCategories] = useState(false);
-
-  // Get unique categories from both API and local products
-  const allCategories = [
-    ...new Set([
-      ...products.map(p => p.category),
-      ...localProducts.map(p => p.category)
-    ])
-  ].filter(Boolean).sort();
-
-  const handleCartClick = (e) => {
-    e.preventDefault();
-    if (user) {
-      navigate("/cart");
-    } else {
-      navigate("/login");
-    }
-  };
-
+  const allCategories = [...new Set([ ...products.map(p => p.category), ...localProducts.map(p => p.category)])].filter(Boolean).sort(); //DIsplay all the categories API and Local
+  
   const handleCategoryClick = (category) => {
     navigate(`/filter/${encodeURIComponent(category)}`);
     setShowCategories(false);
@@ -37,52 +21,44 @@ function NavBar({ user, logout }) {
 
   return (
     <nav className="navbar">
-      <Link to="/" className="nav-link" title="Products">
+      <Link to="/" className="nav-link" title="Products" id='home'>
         <FaBoxOpen size={33} />
       </Link>
 
-      <div 
-        className="filter-container"
-        onMouseEnter={() => setShowCategories(true)}
-        onMouseLeave={() => setShowCategories(false)}
-      >
+      <div className="filter-container" onMouseEnter={() => setShowCategories(true)} onMouseLeave={() => setShowCategories(false)} id='filter'>
         <button className="nav-link" title="Filter by Category">
           <FaFilter size={30} />
         </button>
         {showCategories && (
           <div className="categories-dropdown">
             {allCategories.map(category => (
-              <button 
-                key={category} 
-                className="category-item"
-                onClick={() => handleCategoryClick(category)}
-              >
-                {category}
+              <button key={category} className="category-item" onClick={() => handleCategoryClick(category)} >
+                {category.toUpperCase()}
               </button>
             ))}
           </div>
         )}
       </div>
 
-      <a href="/cart" className="nav-link cart-icon" title="My-Cart" onClick={handleCartClick}>
+     {user && (<Link to="/cart" className="nav-link cart-icon" title="My-Cart"  id='cart'>
         <FaShoppingCart size={30} />
         {cartItemCount > 0 && (
           <span className="cart-count">{cartItemCount}</span>
         )}
-      </a>
+      </Link>)}
 
       {user && (
-        <Link to="/orders" className="nav-link" title="Orders">
+        <Link to="/orders" className="nav-link" title="Orders" id='order'>
           <FaShippingFast size={30} />
         </Link>
       )}
       {user?.role === "admin" && (
-        <Link to="/admin" className="nav-link" title="Admin-Page">
+        <Link to="/admin" className="nav-link" title="Admin-Page" id='admin'>
           <FaUserShield size={30} />
         </Link>
       )}
       {user ? (
-        <button onClick={logout} className="logout-btn" title="Logout">
+        <button onClick={logout} className="logout-btn" title="Logout" id='logout'>
           <FaSignOutAlt size={20} />
         </button>
       ) : (

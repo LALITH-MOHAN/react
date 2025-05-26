@@ -1,7 +1,7 @@
 import { ProductProvider } from './context/ProductContext';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
-import { OrderProvider } from './context/OrderContext'; // Add this
+import { OrderProvider } from './context/OrderContext'; 
 import AppRouter from './AppRouter';
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
     <AuthProvider>
       <ProductProvider>
         <CartProvider>
-          <OrderProvider> {/* Wrap with OrderProvider */}
+          <OrderProvider> 
             <AppRouter />
           </OrderProvider>
         </CartProvider>

@@ -3,10 +3,10 @@ import "../styles/Pagination.css";
 
 const Pagination = ({ totalPosts, postsPerPage, setCurrentPage, currentPage }) => {
   const totalPages = Math.ceil(totalPosts / postsPerPage);
-  let pages = [];
+  let pages = []; 
 
   for (let i = 1; i <= totalPages; i++) {
-    pages.push(i);
+    pages.push(i); 
   }
 
   const goToPrevious = () => {
