@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useOrders } from '../context/OrderContext';
 import { useAuth } from '../context/AuthContext';
+import PopupMessage from '../components/PopupMessage';
 import '../styles/CartPage.css';
 
 function CartPage() {
@@ -9,6 +10,8 @@ function CartPage() {
   const { placeOrder } = useOrders();
   const { user } = useAuth();
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
 
   const total = cart.length > 0
     ? cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
@@ -19,7 +22,8 @@ function CartPage() {
     const order = placeOrder(cart, user.id);
     clearCart(false);
     setShowConfirm(false);
-    alert(`Order #${order.id} placed successfully!`);
+    setPopupMessage(`Order #${order.id} placed successfully!`);
+    setShowPopup(true);
   };
 
   return (
@@ -41,12 +45,20 @@ function CartPage() {
                 <p className="item-price">PRICE: ${item.price}</p>
                 <p className="item-quantity">
                   QUANTITY: 
-                  <input type="number" value={item.quantity} min="1"
+                  <input 
+                    type="number" 
+                    value={item.quantity} 
+                    min="1"
                     onChange={(e) =>
                       updateQuantity(item.id, parseInt(e.target.value) || 1)
-                    } className="quantity-input"/>
+                    } 
+                    className="quantity-input"
+                  />
                 </p>
-                <button className="remove-button" onClick={() => removeFromCart(item.id)}>
+                <button 
+                  className="remove-button" 
+                  onClick={() => removeFromCart(item.id)}
+                >
                   Remove
                 </button>
               </div>
@@ -72,6 +84,14 @@ function CartPage() {
             <button className="cancel-button" onClick={() => setShowConfirm(false)}>Cancel</button>
           </div>
         </div>
+      )}
+
+      {showPopup && (
+        <PopupMessage 
+          message={popupMessage} 
+          onClose={() => setShowPopup(false)} 
+          type="success"
+        />
       )}
     </div>
   );
