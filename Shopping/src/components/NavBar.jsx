@@ -13,7 +13,7 @@ function NavBar({ user, logout }) {
   const allCategories = [...new Set([ ...products.map(p => p.category), ...localProducts.map(p => p.category)])].filter(Boolean).sort(); //DIsplay all the categories API and Local
   
   const handleCategoryClick = (category) => {
-    navigate(`/filter/${encodeURIComponent(category)}`);
+    navigate(`/filter/${encodeURIComponent(category)}`); //navigate to filterpage 
     setShowCategories(false);
   };
 

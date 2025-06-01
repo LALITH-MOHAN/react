@@ -16,9 +16,7 @@ function FilterPage() {
       try {
         setLoading(true);
         
-        const localFiltered = localProducts.filter(
-          p => p.category.toLowerCase() === category.toLowerCase()
-        );
+        const localFiltered = localProducts.filter(p => p.category.toLowerCase() === category.toLowerCase());
         
         let apiFiltered = [];
         try {

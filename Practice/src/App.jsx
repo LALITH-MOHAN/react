@@ -9,12 +9,14 @@ import Child from './components/child'
 import Rendercount from './components/rendercount'
 import Access from './components/accesDOM'
 import Userlist from './components/fetch'
+
+import SWR from './components/swr'
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <Userlist />
+      <SWR/>
     </>
   )
 }

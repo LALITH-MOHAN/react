@@ -16,11 +16,7 @@ export function ProductProvider({ children }) {
       try {
         const response = await fetch('https://dummyjson.com/products?limit=194');
         const data = await response.json();
-        const formattedApiProducts = data.products.map(p => ({...p,
-          sku: p.id.toString(),
-          stock: p.stock,
-          isLocal: false
-        }));
+        const formattedApiProducts = data.products.map(p => ({...p,sku: p.id.toString(), stock: p.stock, isLocal: false}));
         setApiProducts(formattedApiProducts);
         setProducts(prev => [...formattedApiProducts, ...prev.filter(p => p.isLocal)]);
       } catch (err) {
@@ -38,7 +34,6 @@ export function ProductProvider({ children }) {
     
     fetchProducts();
   }, []);
-//verify admin for including ADD,DELETE PRODUCT 
   const verifyAdmin = () => {
     if (!user || user.role !== 'admin') {
       console.error('Admin permission required');
@@ -104,29 +99,11 @@ export function ProductProvider({ children }) {
   };
 
   const adjustStock = (id, amount) => {
-    setProducts(prev =>prev.map(product =>product.id === id
-          ? { 
-              ...product, 
-              stock: Math.max(0, product.stock + amount),
-              updatedAt: new Date().toISOString()
-            }
-          : product
-      )
-    );
+    setProducts(prev =>prev.map(product =>product.id === id  ? { ...product, stock: Math.max(0, product.stock + amount),updatedAt: new Date().toISOString()}: product));
   };
 
   return (
-    <ProductContext.Provider value={{ 
-      products,
-      apiProducts,
-      localProducts,
-      loading,
-      error,
-      addProduct,
-      updateProduct,
-      deleteProduct,
-      adjustStock
-    }}>
+    <ProductContext.Provider value={{ products,apiProducts,localProducts,loading,error,addProduct,updateProduct,deleteProduct,adjustStock }}>
       {children}
     </ProductContext.Provider>
   );

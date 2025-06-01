@@ -9,7 +9,7 @@ function AboutUsPage() {
           Welcome to our shoppy We are dedicated to providing you with the best shopping experience.
         </p>
         <p>
-          Our mission is to offer high quality products at lowest prices with excellent customer service.
+          Our mission is to offer high quality products at lowest prices.
         </p>
       </div>
     </div>

@@ -6,15 +6,7 @@ function ErrorFallback({ error, resetErrorBoundary }) {
       <h3>Something went wrong:</h3>
       <pre style={{ whiteSpace: 'pre-wrap' }}>{error.message}</pre>
       <button onClick={resetErrorBoundary}
-     style={{
-          padding: '8px 16px',
-          backgroundColor: '#ff6b6b',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer'
-        }}
-      >
+     style={{padding: '8px 16px',backgroundColor: '#ff6b6b',color: 'white',border: 'none',borderRadius: '4px',cursor: 'pointer'}}>
         Try Again
       </button>
     </div>

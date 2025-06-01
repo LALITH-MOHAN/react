@@ -38,8 +38,8 @@ export function AuthProvider({ children }) {
       return true;
     }
 
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    const user = users.find(u => u.email === email && u.password === password);
+    const users = JSON.parse(localStorage.getItem('users')) || []; //get all the users
+    const user = users.find(u => u.email === email && u.password === password); //find the specific user if stored
     
     if (user) {
       const { password, ...userData } = user;

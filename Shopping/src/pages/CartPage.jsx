@@ -14,8 +14,7 @@ function CartPage() {
   const [popupMessage, setPopupMessage] = useState('');
 
   const total = cart.length > 0
-    ? cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
-    : 0;
+    ? cart.reduce((acc, item) => acc + item.price * item.quantity, 0): 0;
 
   const handleCheckout = () => {
     if (!user) return;

@@ -4,16 +4,19 @@ import { useProducts } from '../context/ProductContext';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import ProductForm from './admin/ProductForm';
+import PopupMessage from './PopupMessage';
 import '/home/user/Documents/react/Shopping/src/styles/ProductCard.css';
 
 function ProductCard({ product }) {
   const { user } = useAuth();
   const { deleteProduct, updateProduct } = useProducts();
   const { addToCart } = useCart();
-  const navigate = useNavigate(); //if not logged in navigate to login page if add to cart clicked
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [clicked, setClicked] = useState(false);
-  const [adding, setAdding] = useState(false); //to display adding..
+  const [adding, setAdding] = useState(false);
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
 
   const handleAddToCart = async () => {
     if (!user) {
@@ -36,9 +39,13 @@ function ProductCard({ product }) {
   };
 
   const handleDelete = () => {
-    if (window.confirm('Delete this product?')) {
-      deleteProduct(product.id);
-    }
+    setPopupMessage('Are you sure you want to delete this product?');
+    setShowDeletePopup(true);
+  };
+
+  const confirmDelete = () => {
+    deleteProduct(product.id);
+    setShowDeletePopup(false);
   };
 
   const handleEdit = () => setIsEditing(true);
@@ -52,19 +59,19 @@ function ProductCard({ product }) {
   if (isEditing) {
     return (
       <div className="product-card edit-mode" id={`product-${product.id}`}>
-        <ProductForm  product={product} onSubmit={handleSave} onCancel={handleCancel}/>
+        <ProductForm product={product} onSubmit={handleSave} onCancel={handleCancel}/>
       </div>
     );
   }
 
   return (
     <div className="product-card" id={`product-${product.id}`}>
-      <img src={product.thumbnail} alt={product.title} className="product-image"/> {/*IMage of the Product*/}
+      <img src={product.thumbnail} alt={product.title} className="product-image"/>
       <h3 className="product-title">{product.title}</h3>
       <p className="product-price">${product.price}</p>
 
       <button className={`product-btn add-to-cart-btn ${clicked ? 'clicked' : ''}`} onClick={handleAddToCart} disabled={product.stock <= 0 || adding}>
-        {product.stock <= 0 ? 'Out of Stock' : clicked ? 'Added!' :  adding ? 'Adding...' : 'Add to Cart'}
+        {product.stock <= 0 ? 'Out of Stock' : clicked ? 'Added!' : adding ? 'Adding...' : 'Add to Cart'}
       </button>
 
       {user?.role === 'admin' && (
@@ -75,7 +82,9 @@ function ProductCard({ product }) {
           <button className="product-btn edit-btn" onClick={handleEdit}>
             Edit
           </button>
-        </>
+        </>)}
+      {showDeletePopup && (
+        <PopupMessage message={popupMessage}  onClose={() => setShowDeletePopup(false)} type="confirm" onConfirm={confirmDelete} />
       )}
     </div>
   );

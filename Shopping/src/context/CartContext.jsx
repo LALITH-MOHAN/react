@@ -18,7 +18,6 @@ export function CartProvider({ children }) {
     setCart(prevCart => {
       const existingItem = prevCart.find(item => item.id === product.id);
       const newQuantity = existingItem ? existingItem.quantity + 1 : 1;
-
       if (currentProduct.stock < newQuantity) {
         alert("Not enough stock available");
         return prevCart;
@@ -27,12 +26,7 @@ export function CartProvider({ children }) {
       updated = true;
       if (existingItem) {
         return prevCart.map(item =>
-          item.id === product.id
-            ? { ...item, quantity: newQuantity }
-            : item
-        );
-      }
-
+          item.id === product.id? { ...item, quantity: newQuantity }: item); }
       return [...prevCart, { ...product, quantity: 1 }];
     });
 
@@ -84,10 +78,7 @@ export function CartProvider({ children }) {
       adjustStock(id, -quantityChange);
 
       return prevCart.map(item =>
-        item.id === id
-          ? { ...item, quantity: newQuantity }
-          : item
-      );
+        item.id === id ? { ...item, quantity: newQuantity }: item);
     });
   };
 
@@ -101,15 +92,7 @@ export function CartProvider({ children }) {
   };
 
   return (
-    <CartContext.Provider
-      value={{
-        cart,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        clearCart
-      }}
-    >
+    <CartContext.Provider value={{cart,addToCart,removeFromCart,updateQuantity,clearCart }} >
       {children}
     </CartContext.Provider>
   );
