@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import useSWR from 'swr';
 import ProductCard from '../components/ProductCard';
 import { useProducts } from '../context/ProductContext';
-import '/home/user/Documents/react/Shopping/src/styles/FilterPage.css';
+import '../styles/FilterPage.css';
+
+const fetcher = (url) => fetch(url).then(res => res.json());
 
 function FilterPage() {
   const { category } = useParams();
@@ -11,33 +14,33 @@ function FilterPage() {
   const [error, setError] = useState(null);
   const { products, localProducts } = useProducts();
 
-  useEffect(() => {
-    const fetchCategoryProducts = async () => {
-      try {
-        setLoading(true);
-        
-        const localFiltered = localProducts.filter(p => p.category.toLowerCase() === category.toLowerCase());
-        
-        let apiFiltered = [];
-        try {
-          const response = await fetch(`https://dummyjson.com/products/category/${category}`);
-          const data = await response.json();
-          apiFiltered = data.products || [];
-        } catch (apiErr) {
-          console.error("API fetch failed, using local products only:", apiErr);
-        }
-        
-        setFilteredProducts([...apiFiltered, ...localFiltered]);
-      } catch (err) {
-        setError(err.message);
-        console.error("Failed to fetch category products:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { data: apiData, error: apiError } = useSWR(
+    `https://dummyjson.com/products/category/${category}`,
+    fetcher
+  );
 
-    fetchCategoryProducts();
-  }, [category, localProducts]);
+  useEffect(() => {
+    try {
+      setLoading(true);
+      
+      const localFiltered = localProducts.filter(p => 
+        p.category.toLowerCase() === category.toLowerCase()
+      );
+      
+      const apiFiltered = apiData?.products || [];
+      
+      setFilteredProducts([...apiFiltered, ...localFiltered]);
+      
+      if (apiError) {
+        console.error("API fetch failed, using local products only:", apiError);
+      }
+    } catch (err) {
+      setError(err.message);
+      console.error("Failed to process category products:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [category, localProducts, apiData, apiError]);
 
   if (loading) return <div className="filter-page loading">Loading...</div>;
   if (error) return <div className="filter-page error">Error: {error}</div>;

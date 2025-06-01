@@ -2,7 +2,7 @@ import { useAuth } from '../context/AuthContext';
 import ProductForm from '../components/admin/ProductForm';
 import { useProducts } from '../context/ProductContext';
 import { useNavigate } from 'react-router-dom';
-import '/home/user/Documents/react/Shopping/src/styles/AdminPage.css';
+import '../styles/AdminPage.css';
 
 function AdminPage() {
   const { user } = useAuth();

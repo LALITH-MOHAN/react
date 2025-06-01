@@ -1,4 +1,4 @@
-import '/home/user/Documents/react/Shopping/src/styles/AboutUsPage.css';
+import '../styles/AboutUsPage.css';
 
 function AboutUsPage() {
   return (

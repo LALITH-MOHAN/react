@@ -1,5 +1,5 @@
 import React from 'react';
-import '/home/user/Documents/react/Shopping/src/styles/PopupMessage.css';
+import '../styles/PopupMessage.css';
 
 function PopupMessage({ message, onClose, type = 'success', onConfirm }) {
   return (

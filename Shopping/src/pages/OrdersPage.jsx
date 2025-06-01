@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useOrders } from '../context/OrderContext';
 import { useAuth } from '../context/AuthContext';
-import '/home/user/Documents/react/Shopping/src/styles/OrderPage.css';
+import '../styles/OrderPage.css';
 
 function OrdersPage() {
   const { orders } = useOrders();

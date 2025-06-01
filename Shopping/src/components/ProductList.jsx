@@ -8,15 +8,23 @@ import ErrorFallback from './ErrorFallback';
 import '../styles/ProductList.css';
 
 function ProductList() {
-  const { products } = useProducts();
+  const { products, loading, error } = useProducts(); // ← get loading and error
   const { addToCart } = useCart();
 
-  const itemsPerPage = 30; //30 products per page 
+  const itemsPerPage = 30;
   const [currentPage, setCurrentPage] = useState(1);
+
+  if (loading) {
+    return <div className="loading">Loading products...</div>;
+  }
+
+  if (error) {
+    return <div className="error">Error: {error}</div>;
+  }
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = products.slice(indexOfFirstItem, indexOfLastItem); //slicing for paginatin
+  const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <div className="product-list-container">

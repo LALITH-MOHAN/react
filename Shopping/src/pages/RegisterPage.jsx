@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import PopupMessage from '../components/PopupMessage';
-import '/home/user/Documents/react/Shopping/src/styles/ResgisterPage.css';
+import '../styles/ResgisterPage.css';
 
 function RegisterPage() {
   const [name, setName] = useState('');

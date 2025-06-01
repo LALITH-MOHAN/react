@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import ProductForm from './admin/ProductForm';
 import PopupMessage from './PopupMessage';
-import '/home/user/Documents/react/Shopping/src/styles/ProductCard.css';
+import '../styles/ProductCard.css';
 
 function ProductCard({ product }) {
   const { user } = useAuth();

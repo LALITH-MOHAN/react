@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import '/home/user/Documents/react/Shopping/src/styles/LoginPage.css'
+import '../styles/LoginPage.css'
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

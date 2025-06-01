@@ -1,5 +1,5 @@
 import React from 'react'
-import '/home/user/Documents/react/Shopping/src/styles/HomePage.css'
+import '../styles/HomePage.css'
 function HomePage() {
   return (
     <div className='home-container'> 

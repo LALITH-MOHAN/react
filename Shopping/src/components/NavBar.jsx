@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { FaBoxOpen, FaShoppingCart, FaShippingFast, FaUserShield, FaSignOutAlt, FaSignInAlt, FaUserPlus, FaFilter } from "react-icons/fa";
-import '/home/user/Documents/react/Shopping/src/styles/NavBar.css';
+import '../styles/NavBar.css';
 import { useCart } from '../context/CartContext'; 
 import { useState } from 'react';
 import { useProducts } from '../context/ProductContext';
