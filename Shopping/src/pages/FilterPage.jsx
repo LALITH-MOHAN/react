@@ -12,27 +12,28 @@ function FilterPage() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { products, localProducts } = useProducts();
+  const { localProducts } = useProducts();
 
+  // Changed: Remove .products from apiData usage
   const { data: apiData, error: apiError } = useSWR(
-    `https://dummyjson.com/products/category/${category}`,
+    `http://localhost:3000/api/products/category/${category}`,
     fetcher
   );
 
   useEffect(() => {
     try {
       setLoading(true);
-      
       const localFiltered = localProducts.filter(p => 
         p.category.toLowerCase() === category.toLowerCase()
       );
       
-      const apiFiltered = apiData?.products || [];
+      // Changed: Use apiData directly (no .products)
+      const apiFiltered = Array.isArray(apiData) ? apiData : [];
       
       setFilteredProducts([...apiFiltered, ...localFiltered]);
       
       if (apiError) {
-        console.error("API fetch failed, using local products only:", apiError);
+        console.error("API fetch failed:", apiError);
       }
     } catch (err) {
       setError(err.message);

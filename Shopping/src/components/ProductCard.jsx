@@ -18,6 +18,15 @@ function ProductCard({ product }) {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
 
+  // Enhanced null check
+  if (!product || typeof product !== 'object') {
+    return (
+      <div className="product-card">
+        <div className="product-error">Product data not available</div>
+      </div>
+    );
+  }
+
   const handleAddToCart = async () => {
     if (!user) {
       navigate('/login');
@@ -33,6 +42,8 @@ function ProductCard({ product }) {
         setClicked(true);
         setTimeout(() => setClicked(false), 500);
       }
+    } catch (error) {
+      console.error('Error adding to cart:', error);
     } finally {
       setAdding(false);
     }
@@ -44,7 +55,11 @@ function ProductCard({ product }) {
   };
 
   const confirmDelete = () => {
-    deleteProduct(product.id);
+    try {
+      deleteProduct(product.id);
+    } catch (error) {
+      console.error('Error deleting product:', error);
+    }
     setShowDeletePopup(false);
   };
 
@@ -52,8 +67,28 @@ function ProductCard({ product }) {
   const handleCancel = () => setIsEditing(false);
 
   const handleSave = (updatedProduct) => {
-    updateProduct(product.id, updatedProduct);
+    try {
+      updateProduct(product.id, updatedProduct);
+    } catch (error) {
+      console.error('Error updating product:', error);
+    }
     setIsEditing(false);
+  };
+
+  // Safe price formatting
+  const formatPrice = (price) => {
+    try {
+      // Handle both string and number prices
+      const numericPrice = typeof price === 'string' 
+        ? parseFloat(price) 
+        : Number(price);
+      
+      return isNaN(numericPrice) 
+        ? '0.00' 
+        : numericPrice.toFixed(2);
+    } catch {
+      return '0.00';
+    }
   };
 
   if (isEditing) {
@@ -66,25 +101,54 @@ function ProductCard({ product }) {
 
   return (
     <div className="product-card" id={`product-${product.id}`}>
-      <img src={product.thumbnail} alt={product.title} className="product-image"/>
-      <h3 className="product-title">{product.title}</h3>
-      <p className="product-price">${product.price}</p>
+      <img 
+        src={product.thumbnail || 'https://placehold.co/300x300?text=No+Image'} 
+        alt={product.title || 'Untitled Product'} 
+        className="product-image"
+        onError={(e) => {
+          e.target.src = 'https://placehold.co/300x300?text=No+Image';
+        }}
+      />
+      <h3 className="product-title">{product.title || 'Untitled Product'}</h3>
+      <p className="product-price">${formatPrice(product.price)}</p>
 
-      <button className={`product-btn add-to-cart-btn ${clicked ? 'clicked' : ''}`} onClick={handleAddToCart} disabled={product.stock <= 0 || adding}>
-        {product.stock <= 0 ? 'Out of Stock' : clicked ? 'Added!' : adding ? 'Adding...' : 'Add to Cart'}
+      <button 
+        className={`product-btn add-to-cart-btn ${clicked ? 'clicked' : ''}`} 
+        onClick={handleAddToCart} 
+        disabled={(product.stock || 0) <= 0 || adding}
+        aria-label={product.stock <= 0 ? 'Out of stock' : 'Add to cart'}
+      >
+        {(product.stock || 0) <= 0 ? 'Out of Stock' : 
+         clicked ? 'Added!' : 
+         adding ? 'Adding...' : 'Add to Cart'}
       </button>
 
       {user?.role === 'admin' && (
         <>
-          <button className="product-btn delete-btn" onClick={handleDelete}>
+          <button 
+            className="product-btn delete-btn" 
+            onClick={handleDelete}
+            aria-label="Delete product"
+          >
             Delete
           </button>
-          <button className="product-btn edit-btn" onClick={handleEdit}>
+          <button 
+            className="product-btn edit-btn" 
+            onClick={handleEdit}
+            aria-label="Edit product"
+          >
             Edit
           </button>
-        </>)}
+        </>
+      )}
+      
       {showDeletePopup && (
-        <PopupMessage message={popupMessage}  onClose={() => setShowDeletePopup(false)} type="confirm" onConfirm={confirmDelete} />
+        <PopupMessage 
+          message={popupMessage}  
+          onClose={() => setShowDeletePopup(false)} 
+          type="confirm" 
+          onConfirm={confirmDelete} 
+        />
       )}
     </div>
   );

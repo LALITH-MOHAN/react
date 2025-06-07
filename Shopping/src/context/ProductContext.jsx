@@ -14,18 +14,24 @@ export function ProductProvider({ children }) {
   const [error, setError] = useState(null);
   const { user } = useAuth();
 
-  const { data, error: swrError } = useSWR('https://dummyjson.com/products?limit=194', fetcher);
+  const { data, error: swrError } = useSWR('http://localhost:3000/api/products', fetcher);
 
   useEffect(() => {
-    // Load local products from localStorage
-    const savedProducts = JSON.parse(localStorage.getItem('localProducts') || '[]');
+    const savedProducts = JSON.parse(localStorage.getItem('localProducts')) || '[]';
     setLocalProducts(savedProducts);
     setProducts(savedProducts);
   }, []);
 
   useEffect(() => {
     if (data) {
-      const formattedApiProducts = data.products.map(p => ({...p,sku: p.id.toString(),stock: p.stock,isLocal: false}));
+      const formattedApiProducts = Array.isArray(data) 
+        ? data.map(p => ({ 
+            ...p,
+            sku: p.id.toString(),
+            stock: p.stock || 0,
+            isLocal: false
+          }))
+        : [];
       setApiProducts(formattedApiProducts);
       setProducts(prev => [...formattedApiProducts, ...prev.filter(p => p.isLocal)]);
       setLoading(false);
@@ -52,7 +58,7 @@ export function ProductProvider({ children }) {
     const productWithId = {
       ...newProduct,
       id: Date.now(),
-      isLocal: true, // to tell the products is added by the user not from a API
+      isLocal: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -103,19 +109,32 @@ export function ProductProvider({ children }) {
   };
 
   const adjustStock = (id, amount) => {
-    setProducts(prev => prev.map(product => product.id === id ? { 
-      ...product, 
-      stock: Math.max(0, product.stock + amount),
-      updatedAt: new Date().toISOString()
-    } : product));
+    setProducts(prev => prev.map(product => 
+      product.id === id ? { 
+        ...product, 
+        stock: Math.max(0, (product.stock || 0) + amount),
+        updatedAt: new Date().toISOString()
+      } : product
+    ));
   };
 
   return (
-    <ProductContext.Provider value={{ products,apiProducts,localProducts,loading,error,addProduct,updateProduct,deleteProduct,adjustStock}}>
+    <ProductContext.Provider value={{ 
+      products,
+      apiProducts,
+      localProducts,
+      loading,
+      error,
+      addProduct,
+      updateProduct,
+      deleteProduct,
+      adjustStock 
+    }}>
       {children}
     </ProductContext.Provider>
   );
 }
+
 export function useProducts() {
   const context = useContext(ProductContext);
   return context;

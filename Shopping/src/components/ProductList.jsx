@@ -11,7 +11,7 @@ function ProductList() {
   const { products, loading, error } = useProducts(); // ← get loading and error
   const { addToCart } = useCart();
 
-  const itemsPerPage = 30;
+  const itemsPerPage = 9;
   const [currentPage, setCurrentPage] = useState(1);
 
   if (loading) {
