@@ -17,9 +17,16 @@ export function ProductProvider({ children }) {
   const { data, error: swrError } = useSWR('http://localhost:3000/api/products', fetcher);
 
   useEffect(() => {
-    const savedProducts = JSON.parse(localStorage.getItem('localProducts')) || '[]';
-    setLocalProducts(savedProducts);
-    setProducts(savedProducts);
+    try {
+      // Parse localStorage data safely and ensure it's always an array
+      const savedProducts = JSON.parse(localStorage.getItem('localProducts') || '[]');
+      setLocalProducts(Array.isArray(savedProducts) ? savedProducts : []);
+      setProducts(Array.isArray(savedProducts) ? savedProducts : []);
+    } catch (error) {
+      console.error("Error parsing local products:", error);
+      setLocalProducts([]);
+      setProducts([]);
+    }
   }, []);
 
   useEffect(() => {
@@ -33,7 +40,7 @@ export function ProductProvider({ children }) {
           }))
         : [];
       setApiProducts(formattedApiProducts);
-      setProducts(prev => [...formattedApiProducts, ...prev.filter(p => p.isLocal)]);
+      setProducts(prev => [...formattedApiProducts, ...(Array.isArray(prev) ? prev.filter(p => p.isLocal) : [])]);
       setLoading(false);
     }
 
@@ -73,21 +80,29 @@ export function ProductProvider({ children }) {
   const updateProduct = (id, updatedFields) => {
     if (!verifyAdmin()) return false;
     
-    setProducts(prev => prev.map(product => 
-      product.id === id ? { 
-        ...product, 
-        ...updatedFields,
-        updatedAt: new Date().toISOString()
-      } : product
-    ));
+    setProducts(prev => 
+      Array.isArray(prev) 
+        ? prev.map(product => 
+            product.id === id 
+              ? { 
+                  ...product, 
+                  ...updatedFields,
+                  updatedAt: new Date().toISOString()
+                } 
+              : product
+          )
+        : []
+    );
     
-    if (localProducts.some(p => p.id === id)) {
+    if (Array.isArray(localProducts) && localProducts.some(p => p.id === id)) {
       const updatedLocalProducts = localProducts.map(product => 
-        product.id === id ? { 
-          ...product, 
-          ...updatedFields,
-          updatedAt: new Date().toISOString()
-        } : product
+        product.id === id 
+          ? { 
+              ...product, 
+              ...updatedFields,
+              updatedAt: new Date().toISOString()
+            } 
+          : product
       );
       setLocalProducts(updatedLocalProducts);
       localStorage.setItem('localProducts', JSON.stringify(updatedLocalProducts));
@@ -98,9 +113,11 @@ export function ProductProvider({ children }) {
   const deleteProduct = (id) => {
     if (!verifyAdmin()) return false;
     
-    setProducts(prev => prev.filter(product => product.id !== id));
+    setProducts(prev => 
+      Array.isArray(prev) ? prev.filter(product => product.id !== id) : []
+    );
     
-    if (localProducts.some(p => p.id === id)) {
+    if (Array.isArray(localProducts) && localProducts.some(p => p.id === id)) {
       const updatedLocalProducts = localProducts.filter(product => product.id !== id);
       setLocalProducts(updatedLocalProducts);
       localStorage.setItem('localProducts', JSON.stringify(updatedLocalProducts));
@@ -109,20 +126,26 @@ export function ProductProvider({ children }) {
   };
 
   const adjustStock = (id, amount) => {
-    setProducts(prev => prev.map(product => 
-      product.id === id ? { 
-        ...product, 
-        stock: Math.max(0, (product.stock || 0) + amount),
-        updatedAt: new Date().toISOString()
-      } : product
-    ));
+    setProducts(prev => 
+      Array.isArray(prev)
+        ? prev.map(product => 
+            product.id === id
+              ? {
+                  ...product,
+                  stock: Math.max(0, (product.stock || 0) + amount),
+                  updatedAt: new Date().toISOString()
+                }
+              : product
+          )
+        : []
+    );
   };
 
   return (
     <ProductContext.Provider value={{ 
-      products,
-      apiProducts,
-      localProducts,
+      products: Array.isArray(products) ? products : [],
+      apiProducts: Array.isArray(apiProducts) ? apiProducts : [],
+      localProducts: Array.isArray(localProducts) ? localProducts : [],
       loading,
       error,
       addProduct,

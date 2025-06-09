@@ -4,60 +4,94 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) setUser(JSON.parse(storedUser));
+    const verifyUser = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch('http://localhost:3000/api/auth/me', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          setUser(userData);
+        }
+      } catch (error) {
+        console.error('Session verification failed:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    verifyUser();
   }, []);
 
-  const register = (name, email, password) => {
+  const register = async (name, email, password) => {
     try {
-      const users = JSON.parse(localStorage.getItem('users')) || [];
-      
-      // Check if email already exists to avoid duplicates
-      if (users.some(u => u.email === email)) {
-        return false;
+      const response = await fetch('http://localhost:3000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Registration failed');
       }
-      
-      // Add new user credentials
-      localStorage.setItem('users', JSON.stringify([...users,{ id: Date.now(),name,email, password,role: 'customer' }]));
+
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
+      setUser(data.user);
       return true;
-    } 
-    catch (error) {
-      console.error('Registration failed:', error);
+    } catch (error) {
+      console.error('Registration error:', error);
       return false;
     }
   };
 
-  const login = (email, password) => {
-    //  admin login
-    if (email === "admin@gmail.com" && password === "admin123") {
-      const adminUser = { id: 1, name: "Admin", role: "admin" };
-      setUser(adminUser);
-      localStorage.setItem('user', JSON.stringify(adminUser));
-      return true;
-    }
+  const login = async (email, password) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const users = JSON.parse(localStorage.getItem('users')) || []; //get all the users
-    const user = users.find(u => u.email === email && u.password === password); //find the specific user if stored
-    
-    if (user) {
-      const { password, ...userData } = user;
-      setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
+      }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
+      setUser(data.user);
       return true;
+    } catch (error) {
+      console.error('Login error:', error);
+      return false;
     }
-    
-    return false;
   };
 
   const logout = () => {
-    localStorage.removeItem('user');
+    localStorage.removeItem('token');
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, register, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, register, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -7,17 +7,27 @@ import { useProducts } from '../context/ProductContext';
 
 function NavBar({ user, logout }) {
   const navigate = useNavigate();
-  const { cart } = useCart();
-  const { products, localProducts } = useProducts();
+  const { cart = [] } = useCart();
+  const { products: productData = [], localProducts = [] } = useProducts();
   const [showCategories, setShowCategories] = useState(false);
-  const allCategories = [...new Set([ ...products.map(p => p.category), ...localProducts.map(p => p.category)])].filter(Boolean).sort(); //DIsplay all the categories API and Local
   
+  // Convert products to array if it's not already
+  const products = Array.isArray(productData) ? productData : [];
+  
+  // Safely get all categories
+  const allCategories = [
+    ...new Set([
+      ...products.map(p => p?.category).filter(Boolean),
+      ...(Array.isArray(localProducts) ? localProducts.map(p => p?.category).filter(Boolean) : [])
+    ])
+  ].sort();
+
   const handleCategoryClick = (category) => {
-    navigate(`/filter/${encodeURIComponent(category)}`); //navigate to filterpage 
+    navigate(`/filter/${encodeURIComponent(category)}`);
     setShowCategories(false);
   };
 
-  const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const cartItemCount = cart.reduce((total, item) => total + (item?.quantity || 0), 0);
 
   return (
     <nav className="navbar">
@@ -25,14 +35,21 @@ function NavBar({ user, logout }) {
         <FaBoxOpen size={33} />
       </Link>
 
-      <div className="filter-container" onMouseEnter={() => setShowCategories(true)} onMouseLeave={() => setShowCategories(false)} id='filter'>
+      <div className="filter-container" 
+           onMouseEnter={() => setShowCategories(true)} 
+           onMouseLeave={() => setShowCategories(false)} 
+           id='filter'>
         <button className="nav-link" title="Filter by Category">
           <FaFilter size={30} />
         </button>
         {showCategories && (
           <div className="categories-dropdown">
             {allCategories.map(category => (
-              <button key={category} className="category-item" onClick={() => handleCategoryClick(category)} >
+              <button 
+                key={category} 
+                className="category-item" 
+                onClick={() => handleCategoryClick(category)}
+              >
                 {category.toUpperCase()}
               </button>
             ))}
@@ -40,23 +57,27 @@ function NavBar({ user, logout }) {
         )}
       </div>
 
-     {user && (<Link to="/cart" className="nav-link cart-icon" title="My-Cart"  id='cart'>
-        <FaShoppingCart size={30} />
-        {cartItemCount > 0 && (
-          <span className="cart-count">{cartItemCount}</span>
-        )}
-      </Link>)}
+      {user && (
+        <Link to="/cart" className="nav-link cart-icon" title="My-Cart" id='cart'>
+          <FaShoppingCart size={30} />
+          {cartItemCount > 0 && (
+            <span className="cart-count">{cartItemCount}</span>
+          )}
+        </Link>
+      )}
 
       {user && (
         <Link to="/orders" className="nav-link" title="Orders" id='order'>
           <FaShippingFast size={30} />
         </Link>
       )}
+
       {user?.role === "admin" && (
         <Link to="/admin" className="nav-link" title="Admin-Page" id='admin'>
           <FaUserShield size={30} />
         </Link>
       )}
+
       {user ? (
         <button onClick={logout} className="logout-btn" title="Logout" id='logout'>
           <FaSignOutAlt size={20} />
