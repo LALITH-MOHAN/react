@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaBoxOpen, FaShoppingCart, FaShippingFast, FaUserShield, FaSignOutAlt, FaSignInAlt, FaUserPlus, FaFilter } from "react-icons/fa";
 import '../styles/NavBar.css';
 import { useCart } from '../context/CartContext'; 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useProducts } from '../context/ProductContext';
 
 function NavBar({ user, logout }) {
@@ -11,23 +11,24 @@ function NavBar({ user, logout }) {
   const { products: productData = [], localProducts = [] } = useProducts();
   const [showCategories, setShowCategories] = useState(false);
   
-  // Convert products to array if it's not already
-  const products = Array.isArray(productData) ? productData : [];
-  
-  // Safely get all categories
-  const allCategories = [
-    ...new Set([
-      ...products.map(p => p?.category).filter(Boolean),
-      ...(Array.isArray(localProducts) ? localProducts.map(p => p?.category).filter(Boolean) : [])
-    ])
-  ].sort();
+  // Memoize categories to prevent unnecessary recalculations
+  const allCategories = useMemo(() => {
+    return [
+      ...new Set([
+        ...Array.isArray(productData) ? productData.map(p => p?.category).filter(Boolean) : [],
+        ...Array.isArray(localProducts) ? localProducts.map(p => p?.category).filter(Boolean) : []
+      ])
+    ].sort();
+  }, [productData, localProducts]);
 
   const handleCategoryClick = (category) => {
     navigate(`/filter/${encodeURIComponent(category)}`);
     setShowCategories(false);
   };
 
-  const cartItemCount = cart.reduce((total, item) => total + (item?.quantity || 0), 0);
+  const cartItemCount = useMemo(() => {
+    return cart.reduce((total, item) => total + (item?.quantity || 0), 0);
+  }, [cart]);
 
   return (
     <nav className="navbar">

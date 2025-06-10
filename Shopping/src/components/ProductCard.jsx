@@ -9,16 +9,14 @@ import '../styles/ProductCard.css';
 
 function ProductCard({ product }) {
   const { user } = useAuth();
-  const { deleteProduct, updateProduct } = useProducts();
+  const { deleteProduct } = useProducts();
   const { addToCart } = useCart();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [adding, setAdding] = useState(false);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
-  const [popupMessage, setPopupMessage] = useState('');
 
-  // Enhanced null check
   if (!product || typeof product !== 'object') {
     return (
       <div className="product-card">
@@ -49,43 +47,23 @@ function ProductCard({ product }) {
     }
   };
 
-  const handleDelete = () => {
-    setPopupMessage('Are you sure you want to delete this product?');
-    setShowDeletePopup(true);
-  };
+  const handleDelete = () => setShowDeletePopup(true);
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     try {
-      deleteProduct(product.id);
+      await deleteProduct(product.id);
     } catch (error) {
       console.error('Error deleting product:', error);
     }
     setShowDeletePopup(false);
   };
 
-  const handleEdit = () => setIsEditing(true);
-  const handleCancel = () => setIsEditing(false);
-
-  const handleSave = (updatedProduct) => {
-    try {
-      updateProduct(product.id, updatedProduct);
-    } catch (error) {
-      console.error('Error updating product:', error);
-    }
-    setIsEditing(false);
-  };
-
-  // Safe price formatting
   const formatPrice = (price) => {
     try {
-      // Handle both string and number prices
       const numericPrice = typeof price === 'string' 
         ? parseFloat(price) 
         : Number(price);
-      
-      return isNaN(numericPrice) 
-        ? '0.00' 
-        : numericPrice.toFixed(2);
+      return isNaN(numericPrice) ? '0.00' : numericPrice.toFixed(2);
     } catch {
       return '0.00';
     }
@@ -93,14 +71,17 @@ function ProductCard({ product }) {
 
   if (isEditing) {
     return (
-      <div className="product-card edit-mode" id={`product-${product.id}`}>
-        <ProductForm product={product} onSubmit={handleSave} onCancel={handleCancel}/>
+      <div className="product-card edit-mode">
+        <ProductForm 
+          product={product} 
+          onCancel={() => setIsEditing(false)}
+        />
       </div>
     );
   }
 
   return (
-    <div className="product-card" id={`product-${product.id}`}>
+    <div className="product-card">
       <img 
         src={product.thumbnail || 'https://placehold.co/300x300?text=No+Image'} 
         alt={product.title || 'Untitled Product'} 
@@ -111,12 +92,13 @@ function ProductCard({ product }) {
       />
       <h3 className="product-title">{product.title || 'Untitled Product'}</h3>
       <p className="product-price">${formatPrice(product.price)}</p>
+      <p className="product-stock">Stock: {product.stock || 0}</p>
+      <p className="product-category">{product.category || 'Uncategorized'}</p>
 
       <button 
-        className={`product-btn add-to-cart-btn ${clicked ? 'clicked' : ''}`} 
+        className={`add-to-cart-btn ${clicked ? 'clicked' : ''}`} 
         onClick={handleAddToCart} 
         disabled={(product.stock || 0) <= 0 || adding}
-        aria-label={product.stock <= 0 ? 'Out of stock' : 'Add to cart'}
       >
         {(product.stock || 0) <= 0 ? 'Out of Stock' : 
          clicked ? 'Added!' : 
@@ -124,30 +106,22 @@ function ProductCard({ product }) {
       </button>
 
       {user?.role === 'admin' && (
-        <>
-          <button 
-            className="product-btn delete-btn" 
-            onClick={handleDelete}
-            aria-label="Delete product"
-          >
-            Delete
-          </button>
-          <button 
-            className="product-btn edit-btn" 
-            onClick={handleEdit}
-            aria-label="Edit product"
-          >
+        <div className="admin-actions">
+          <button className="edit-btn" onClick={() => setIsEditing(true)}>
             Edit
           </button>
-        </>
+          <button className="delete-btn" onClick={handleDelete}>
+            Delete
+          </button>
+        </div>
       )}
-      
+
       {showDeletePopup && (
         <PopupMessage 
-          message={popupMessage}  
-          onClose={() => setShowDeletePopup(false)} 
-          type="confirm" 
-          onConfirm={confirmDelete} 
+          message="Are you sure you want to delete this product?"
+          onClose={() => setShowDeletePopup(false)}
+          onConfirm={confirmDelete}
+          type="confirm"
         />
       )}
     </div>

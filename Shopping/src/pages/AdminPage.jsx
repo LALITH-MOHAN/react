@@ -1,12 +1,10 @@
 import { useAuth } from '../context/AuthContext';
 import ProductForm from '../components/admin/ProductForm';
-import { useProducts } from '../context/ProductContext';
 import { useNavigate } from 'react-router-dom';
 import '../styles/AdminPage.css';
 
 function AdminPage() {
   const { user } = useAuth();
-  const { addProduct } = useProducts();
   const navigate = useNavigate();
 
   if (user?.role !== 'admin') {
@@ -18,7 +16,7 @@ function AdminPage() {
     <div className='full'>
       <div className="admin-container">
         <h2>Add New Product Details</h2>
-        <ProductForm onSubmit={addProduct} />
+        <ProductForm />
       </div>
     </div>
   );
