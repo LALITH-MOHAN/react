@@ -15,15 +15,20 @@ function CartPage() {
 
   const total = cart.length > 0
     ? cart.reduce((acc, item) => acc + item.price * item.quantity, 0): 0;
-
-  const handleCheckout = () => {
-    if (!user) return;
-    const order = placeOrder(cart, user.id);
-    clearCart(false);
-    setShowConfirm(false);
-    setPopupMessage(`Order #${order.id} placed successfully!`);
-    setShowPopup(true);
-  };
+    const handleCheckout = async () => {
+      if (!user) return;
+      
+      try {
+        const order = await placeOrder(cart, user.id);
+        await clearCart(false);
+        setShowConfirm(false);
+        setPopupMessage(`Order #${order.id} placed successfully!`);
+        setShowPopup(true);
+      } catch (error) {
+        setPopupMessage(`Failed to place order: ${error.message}`);
+        setShowPopup(true);
+      }
+    };
 
   return (
     <div className="cart-page">
