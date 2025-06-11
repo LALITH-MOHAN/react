@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useOrders } from '../context/OrderContext';
 import { useAuth } from '../context/AuthContext';
+import { useProducts } from '../context/ProductContext';
 import PopupMessage from '../components/PopupMessage';
 import '../styles/CartPage.css';
 
@@ -9,26 +10,29 @@ function CartPage() {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
   const { placeOrder } = useOrders();
   const { user } = useAuth();
+  const { refreshProducts } = useProducts();
   const [showConfirm, setShowConfirm] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
 
   const total = cart.length > 0
-    ? cart.reduce((acc, item) => acc + item.price * item.quantity, 0): 0;
-    const handleCheckout = async () => {
-      if (!user) return;
-      
-      try {
-        const order = await placeOrder(cart, user.id);
-        await clearCart(false);
-        setShowConfirm(false);
-        setPopupMessage(`Order #${order.id} placed successfully!`);
-        setShowPopup(true);
-      } catch (error) {
-        setPopupMessage(`Failed to place order: ${error.message}`);
-        setShowPopup(true);
-      }
-    };
+    ? cart.reduce((acc, item) => acc + item.price * item.quantity, 0) : 0;
+
+  const handleCheckout = async () => {
+    if (!user) return;
+    
+    try {
+      const order = await placeOrder(cart, user.id);
+      await clearCart(false);
+      await refreshProducts(); // Refresh products to update stock
+      setShowConfirm(false);
+      setPopupMessage(`Order #${order.id} placed successfully!`);
+      setShowPopup(true);
+    } catch (error) {
+      setPopupMessage(`Failed to place order: ${error.message}`);
+      setShowPopup(true);
+    }
+  };
 
   return (
     <div className="cart-page">

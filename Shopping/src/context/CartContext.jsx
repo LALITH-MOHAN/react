@@ -61,8 +61,7 @@ export function CartProvider({ children }) {
       return true;
     } catch (error) {
       console.error('Error adding to cart:', error);
-      alert(error.message);
-      return false;
+      throw error;
     }
   };
 
@@ -149,9 +148,5 @@ export function CartProvider({ children }) {
 }
 
 export function useCart() {
-  const context = useContext(CartContext);
-  if (!context) {
-    throw new Error('useCart must be used within a CartProvider');
-  }
-  return context;
+  return useContext(CartContext);
 }

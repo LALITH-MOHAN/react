@@ -10,12 +10,13 @@ import '../styles/ProductCard.css';
 function ProductCard({ product }) {
   const { user } = useAuth();
   const { deleteProduct } = useProducts();
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [adding, setAdding] = useState(false);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [error, setError] = useState(null);
 
   if (!product || typeof product !== 'object') {
     return (
@@ -25,14 +26,20 @@ function ProductCard({ product }) {
     );
   }
 
+  // Get current quantity in cart
+  const cartItem = cart.find(item => item.id === product.id);
+  const currentInCart = cartItem ? cartItem.quantity : 0;
+  const isOutOfStock = product.stock <= currentInCart;
+
   const handleAddToCart = async () => {
     if (!user) {
       navigate('/login');
       return;
     }
     
-    if (adding) return;
+    if (adding || isOutOfStock) return;
     setAdding(true);
+    setError(null);
     
     try {
       const success = await addToCart(product);
@@ -41,7 +48,7 @@ function ProductCard({ product }) {
         setTimeout(() => setClicked(false), 500);
       }
     } catch (error) {
-      console.error('Error adding to cart:', error);
+      setError(error.message);
     } finally {
       setAdding(false);
     }
@@ -98,12 +105,14 @@ function ProductCard({ product }) {
       <button 
         className={`add-to-cart-btn ${clicked ? 'clicked' : ''}`} 
         onClick={handleAddToCart} 
-        disabled={(product.stock || 0) <= 0 || adding}
+        disabled={isOutOfStock || adding}
       >
-        {(product.stock || 0) <= 0 ? 'Out of Stock' : 
+        {isOutOfStock ? 'Out of Stock' : 
          clicked ? 'Added!' : 
          adding ? 'Adding...' : 'Add to Cart'}
       </button>
+
+      {error && <div className="error-message">{error}</div>}
 
       {user?.role === 'admin' && (
         <div className="admin-actions">

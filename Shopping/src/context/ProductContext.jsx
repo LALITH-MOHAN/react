@@ -11,12 +11,14 @@ export function ProductProvider({ children }) {
 
   const fetchProducts = async () => {
     try {
+      setLoading(true);
       const response = await fetch('http://localhost:3000/api/products');
       const data = await response.json();
       setProducts(data);
-      setLoading(false);
+      setError(null);
     } catch (err) {
       setError(err.message);
+    } finally {
       setLoading(false);
     }
   };
@@ -93,6 +95,10 @@ export function ProductProvider({ children }) {
     }
   };
 
+  const refreshProducts = async () => {
+    await fetchProducts();
+  };
+
   return (
     <ProductContext.Provider value={{ 
       products,
@@ -101,7 +107,7 @@ export function ProductProvider({ children }) {
       addProduct,
       updateProduct,
       deleteProduct,
-      refreshProducts: fetchProducts
+      refreshProducts
     }}>
       {children}
     </ProductContext.Provider>
