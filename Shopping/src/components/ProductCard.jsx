@@ -26,10 +26,10 @@ function ProductCard({ product }) {
     );
   }
 
-  // Get current quantity in cart
+  // Get current quantity in cart for this user
   const cartItem = cart.find(item => item.id === product.id);
   const currentInCart = cartItem ? cartItem.quantity : 0;
-  const isOutOfStock = product.stock <= currentInCart;
+  const isOutOfStockForUser = currentInCart >= product.stock;
 
   const handleAddToCart = async () => {
     if (!user) {
@@ -37,7 +37,7 @@ function ProductCard({ product }) {
       return;
     }
     
-    if (adding || isOutOfStock) return;
+    if (adding || isOutOfStockForUser) return;
     setAdding(true);
     setError(null);
     
@@ -105,9 +105,9 @@ function ProductCard({ product }) {
       <button 
         className={`add-to-cart-btn ${clicked ? 'clicked' : ''}`} 
         onClick={handleAddToCart} 
-        disabled={isOutOfStock || adding}
+        disabled={isOutOfStockForUser || adding}
       >
-        {isOutOfStock ? 'Out of Stock' : 
+        {isOutOfStockForUser ? 'Out of Stock for You' : 
          clicked ? 'Added!' : 
          adding ? 'Adding...' : 'Add to Cart'}
       </button>
