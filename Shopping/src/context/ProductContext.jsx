@@ -12,12 +12,25 @@ export function ProductProvider({ children }) {
     totalPages: 1,
     totalProducts: 0
   });
+  const [allCategories, setAllCategories] = useState([]);
   const { user } = useAuth();
 
-  const fetchProducts = useCallback(async (page = 1, limit = 9) => {
+  const fetchAllCategories = useCallback(async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/products/categories');
+      if (!response.ok) throw new Error('Failed to fetch categories');
+      const data = await response.json();
+      setAllCategories(data);
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+      setAllCategories([]);
+    }
+  }, []);
+
+  const fetchProducts = useCallback(async (page = 1) => { // Removed limit parameter
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3000/api/products?page=${page}&limit=${limit}`);
+      const response = await fetch(`http://localhost:3000/api/products?page=${page}`); // Removed limit from URL
       if (!response.ok) throw new Error('Failed to fetch products');
       const data = await response.json();
       setProducts(data.products);
@@ -35,10 +48,10 @@ export function ProductProvider({ children }) {
     }
   }, []);
 
-  const fetchProductsByCategory = useCallback(async (category, page = 1, limit = 9) => {
+  const fetchProductsByCategory = useCallback(async (category, page = 1) => { // Removed limit parameter
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3000/api/products/category/${category}?page=${page}&limit=${limit}`);
+      const response = await fetch(`http://localhost:3000/api/products/category/${category}?page=${page}`); // Removed limit from URL
       if (!response.ok) throw new Error('Failed to fetch products by category');
       const data = await response.json();
       setProducts(data.products);
@@ -56,10 +69,10 @@ export function ProductProvider({ children }) {
     }
   }, []);
 
-  // Initial fetch
   useEffect(() => {
     fetchProducts();
-  }, [fetchProducts]);
+    fetchAllCategories();
+  }, [fetchProducts, fetchAllCategories]);
 
   const addProduct = async (newProduct) => {
     try {
@@ -139,12 +152,14 @@ export function ProductProvider({ children }) {
       loading,
       error,
       pagination,
+      allCategories,
       addProduct,
       updateProduct,
       deleteProduct,
       refreshProducts,
       fetchProducts,
-      fetchProductsByCategory
+      fetchProductsByCategory,
+      fetchAllCategories
     }}>
       {children}
     </ProductContext.Provider>

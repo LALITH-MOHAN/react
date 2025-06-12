@@ -26,7 +26,6 @@ function ProductCard({ product }) {
     );
   }
 
-  // Get current quantity in cart for this user
   const cartItem = cart.find(item => item.id === product.id);
   const currentInCart = cartItem ? cartItem.quantity : 0;
   const isOutOfStockForUser = currentInCart >= product.stock;
