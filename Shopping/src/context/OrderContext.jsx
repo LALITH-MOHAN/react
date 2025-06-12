@@ -7,12 +7,12 @@ export function OrderProvider({ children }) {
   const [orders, setOrders] = useState([]);
   const { user } = useAuth();
 
-  const fetchOrders = async () => {
+  const fetchOrders = async (page = 1) => {
     if (!user) return;
     
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/orders', {
+      const response = await fetch(`http://localhost:3000/api/orders?page=${page}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -21,7 +21,11 @@ export function OrderProvider({ children }) {
       if (!response.ok) throw new Error('Failed to fetch orders');
       
       const data = await response.json();
-      setOrders(data);
+      if (page === 1) {
+        setOrders(data.orders);
+      } else {
+        setOrders(prev => [...prev, ...data.orders]);
+      }
     } catch (error) {
       console.error('Error fetching orders:', error);
       setOrders([]);
@@ -51,10 +55,10 @@ export function OrderProvider({ children }) {
 
       if (!response.ok) throw new Error('Failed to place order');
 
-      const updatedOrders = await response.json();
-      setOrders(updatedOrders);
+      const data = await response.json();
+      setOrders(data);
       
-      return updatedOrders[0]; 
+      return data[0];
     } catch (error) {
       console.error('Error placing order:', error);
       throw error;
