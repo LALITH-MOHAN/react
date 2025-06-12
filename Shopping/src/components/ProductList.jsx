@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useProducts } from '../context/ProductContext';
 import { useCart } from '../context/CartContext';
 import ProductCard from './ProductCard';
@@ -8,11 +8,19 @@ import ErrorFallback from './ErrorFallback';
 import '../styles/ProductList.css';
 
 function ProductList() {
-  const { products, loading, error } = useProducts(); // ← get loading and error
+  const { 
+    products, 
+    loading, 
+    error, 
+    pagination, 
+    fetchProducts 
+  } = useProducts();
   const { addToCart } = useCart();
-
-  const itemsPerPage = 9;
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    fetchProducts(currentPage);
+  }, [currentPage]);
 
   if (loading) {
     return <div className="loading">Loading products...</div>;
@@ -22,21 +30,23 @@ function ProductList() {
     return <div className="error">Error: {error}</div>;
   }
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
-
   return (
     <div className="product-list-container">
       <h2 className="product-list-title">PRODUCTS</h2>
       <div className="product-grid">
-        {currentItems.map((product) => (
-          <ErrorBoundary key={product.id} FallbackComponent={ErrorFallback} onReset={() => window.location.reload()}>
+        {products.map((product) => (
+          <ErrorBoundary key={product.id} FallbackComponent={ErrorFallback}>
             <ProductCard product={product} onAddToCart={addToCart} />
           </ErrorBoundary>
         ))}
       </div>
-      <Pagination totalPosts={products.length} postsPerPage={itemsPerPage} setCurrentPage={setCurrentPage} currentPage={currentPage}/>
+      <Pagination 
+        totalPosts={pagination.totalProducts} 
+        postsPerPage={9} 
+        setCurrentPage={setCurrentPage} 
+        currentPage={currentPage}
+        totalPages={pagination.totalPages}
+      />
     </div>
   );
 }

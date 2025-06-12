@@ -34,7 +34,7 @@ function OrdersPage() {
                 <h3>Order #{order.id}</h3>
                 <p><strong>Date:</strong> {new Date(order.date).toLocaleString()}</p>
                 <p><strong>Total:</strong> ₹{order.total.toFixed(2)}</p>
-                <p><strong>Status:</strong> {order.status || 'Pending'}</p>
+                <p><strong>Status:</strong> {order.status || 'OrderPlaced'}</p>
                 
                 <div className="order-products">
                   <h4>Products Ordered:</h4>

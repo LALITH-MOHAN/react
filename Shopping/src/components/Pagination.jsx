@@ -1,12 +1,26 @@
 import React from "react";
 import "../styles/Pagination.css";
 
-const Pagination = ({ totalPosts, postsPerPage, setCurrentPage, currentPage }) => {
-  const totalPages = Math.ceil(totalPosts / postsPerPage);
-  let pages = []; 
+const Pagination = ({ 
+  totalPosts, 
+  postsPerPage, 
+  setCurrentPage, 
+  currentPage,
+  totalPages 
+}) => {
+  let pages = [];
 
-  for (let i = 1; i <= totalPages; i++) {
-    pages.push(i); 
+  // Show limited page numbers (e.g., 1 2 3 ... 10)
+  const maxVisiblePages = 5;
+  let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+  let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+  if (endPage - startPage + 1 < maxVisiblePages) {
+    startPage = Math.max(1, endPage - maxVisiblePages + 1);
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
+    pages.push(i);
   }
 
   const goToPrevious = () => {
@@ -23,13 +37,24 @@ const Pagination = ({ totalPosts, postsPerPage, setCurrentPage, currentPage }) =
 
   return (
     <div className='pagination'>
-      <button onClick={goToPrevious} disabled={currentPage === 1} className="nav-button">
-         Prev
+      <button 
+        onClick={goToPrevious} 
+        disabled={currentPage === 1} 
+        className="nav-button"
+      >
+        Prev
       </button>
 
-      {pages.map((page, index) => (
+      {startPage > 1 && (
+        <>
+          <button onClick={() => setCurrentPage(1)}>1</button>
+          {startPage > 2 && <span className="ellipsis">...</span>}
+        </>
+      )}
+
+      {pages.map((page) => (
         <button
-          key={index}
+          key={page}
           onClick={() => setCurrentPage(page)}
           className={page === currentPage ? "active" : ""}
         >
@@ -37,7 +62,18 @@ const Pagination = ({ totalPosts, postsPerPage, setCurrentPage, currentPage }) =
         </button>
       ))}
 
-      <button onClick={goToNext} disabled={currentPage === totalPages} className="nav-button">
+      {endPage < totalPages && (
+        <>
+          {endPage < totalPages - 1 && <span className="ellipsis">...</span>}
+          <button onClick={() => setCurrentPage(totalPages)}>{totalPages}</button>
+        </>
+      )}
+
+      <button 
+        onClick={goToNext} 
+        disabled={currentPage === totalPages} 
+        className="nav-button"
+      >
         Next
       </button>
     </div>

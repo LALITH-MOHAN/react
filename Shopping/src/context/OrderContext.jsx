@@ -54,7 +54,7 @@ export function OrderProvider({ children }) {
       const updatedOrders = await response.json();
       setOrders(updatedOrders);
       
-      return updatedOrders[0]; // Return the newest order
+      return updatedOrders[0]; 
     } catch (error) {
       console.error('Error placing order:', error);
       throw error;
