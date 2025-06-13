@@ -45,11 +45,6 @@ function CartPage() {
             {cart.map((item) => (
               <div key={item.id} className="cart-item">
                 <h3 className="item-title">{item.title}</h3>
-                <img
-                  src={item.thumbnail}
-                  alt={item.title}
-                  className="item-thumbnail"
-                />
                 <p className="item-price">PRICE: ${item.price}</p>
                 <p className="item-quantity">
                   QUANTITY: 

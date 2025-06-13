@@ -27,10 +27,10 @@ export function ProductProvider({ children }) {
     }
   }, []);
 
-  const fetchProducts = useCallback(async (page = 1) => { // Removed limit parameter
+  const fetchProducts = useCallback(async (page = 1) => { 
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3000/api/products?page=${page}`); // Removed limit from URL
+      const response = await fetch(`http://localhost:3000/api/products?page=${page}`); 
       if (!response.ok) throw new Error('Failed to fetch products');
       const data = await response.json();
       setProducts(data.products);

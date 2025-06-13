@@ -75,6 +75,12 @@ function ProductCard({ product }) {
     }
   };
 
+  const getImageUrl = () => {
+    if (!product.thumbnail) return 'https://placehold.co/600x400?text=No+Image';
+    if (product.thumbnail.startsWith('http')) return product.thumbnail;
+    return `http://localhost:3000${product.thumbnail}`;
+  };
+
   if (isEditing) {
     return (
       <div className="product-card edit-mode">
@@ -88,39 +94,46 @@ function ProductCard({ product }) {
 
   return (
     <div className="product-card">
-      <div className="image-container">
-     <img src={product.thumbnail || 'https://placehold.co/600x400?text=No+Image'} alt={product.title || 'Untitled Product'} className="product-image"
-      onError={(e) => {
-      e.target.src = 'https://placehold.co/600x400?text=No+Image';
-      e.target.className = 'product-image placeholder-image';}}/>
-    </div>
+      <div className="product-image-container">
+        <img 
+          src={getImageUrl()} 
+          alt={product.title || 'Untitled Product'} 
+          className="product-image"
+          onError={(e) => {
+            e.target.src = 'https://placehold.co/600x400?text=No+Image';
+            e.target.className = 'product-image placeholder-image';
+          }}
+        />
+      </div>
       <h3 className="product-title">{product.title || 'Untitled Product'}</h3>
       <p className="product-price">${formatPrice(product.price)}</p>
       <p className="product-stock">Stock: {product.stock || 0}</p>
       <p className="product-category">{product.category || 'Uncategorized'}</p>
 
-      <button 
-        className={`add-to-cart-btn ${clicked ? 'clicked' : ''}`} 
-        onClick={handleAddToCart} 
-        disabled={isOutOfStockForUser || adding}
-      >
-        {isOutOfStockForUser ? 'Out of Stock for You' : 
-         clicked ? 'Added!' : 
-         adding ? 'Adding...' : 'Add to Cart'}
-      </button>
+      <div className="action-buttons">
+        <button 
+          className={`add-to-cart-btn ${clicked ? 'clicked' : ''}`} 
+          onClick={handleAddToCart} 
+          disabled={isOutOfStockForUser || adding}
+        >
+          {isOutOfStockForUser ? 'Out of Stock' : 
+           clicked ? 'Added!' : 
+           adding ? 'Adding...' : 'Add to Cart'}
+        </button>
+
+        {user?.role === 'admin' && (
+          <div className="admin-actions">
+            <button className="edit-btn" onClick={() => setIsEditing(true)}>
+              Edit
+            </button>
+            <button className="delete-btn" onClick={handleDelete}>
+              Delete
+            </button>
+          </div>
+        )}
+      </div>
 
       {error && <div className="error-message">{error}</div>}
-
-      {user?.role === 'admin' && (
-        <div className="admin-actions">
-          <button className="edit-btn" onClick={() => setIsEditing(true)}>
-            Edit
-          </button>
-          <button className="delete-btn" onClick={handleDelete}>
-            Delete
-          </button>
-        </div>
-      )}
 
       {showDeletePopup && (
         <PopupMessage 

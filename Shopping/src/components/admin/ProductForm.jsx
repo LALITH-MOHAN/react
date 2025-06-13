@@ -12,9 +12,10 @@ function ProductForm({ product = null, onCancel }) {
     stock: product?.stock || '',
     category: product?.category || '',
     description: product?.description || '',
-    thumbnail: product?.thumbnail || ''
+    thumbnail: product?.thumbnail || '' // This will store path like "/products/image.jpg"
   });
   const [status, setStatus] = useState('');
+  const [imageFile, setImageFile] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,11 +51,14 @@ function ProductForm({ product = null, onCancel }) {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData(prev => ({ ...prev, thumbnail: reader.result }));
-      };
-      reader.readAsDataURL(file);
+      setImageFile(file);
+      // Generate clean filename based on product title
+      const cleanTitle = formData.title.toLowerCase().replace(/[^a-z0-9]/g, '_');
+      const fileName = `${cleanTitle || 'product'}_${Date.now()}.${file.name.split('.').pop()}`;
+      setFormData(prev => ({ 
+        ...prev, 
+        thumbnail: `/products/${fileName}` 
+      }));
     }
   };
 
@@ -124,9 +128,17 @@ function ProductForm({ product = null, onCancel }) {
           accept="image/*" 
           onChange={handleImageChange} 
         />
+        <small className="image-help-text">
+          After selecting, manually add the image to <code>/public/products/</code> as: 
+          {formData.thumbnail ? ` ${formData.thumbnail.split('/').pop()}` : ' [filename]'}
+        </small>
         {formData.thumbnail && (
           <div className="image-preview">
-            <img src={formData.thumbnail} alt="Preview" />
+            <img 
+              src={formData.thumbnail.startsWith('http') ? formData.thumbnail : 
+                   `http://localhost:3000${formData.thumbnail}`} 
+              alt="Preview" 
+            />
           </div>
         )}
       </div>

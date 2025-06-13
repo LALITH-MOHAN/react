@@ -7,7 +7,7 @@ import { useProducts } from '../context/ProductContext';
 
 function NavBar({ user, logout }) {
   const navigate = useNavigate();
-  const { cart = [] } = useCart(); // Changed to useCart instead of useProducts
+  const { cart = [] } = useCart(); 
   const { allCategories = [], fetchAllCategories } = useProducts();
   const [showCategories, setShowCategories] = useState(false);
 
@@ -20,7 +20,6 @@ function NavBar({ user, logout }) {
     setShowCategories(false);
   };
 
-  // Correct cart item count calculation
   const cartItemCount = cart.reduce((total, item) => total + (item.quantity || 0), 0);
 
   return (
@@ -39,11 +38,7 @@ function NavBar({ user, logout }) {
         {showCategories && (
           <div className="categories-dropdown">
             {allCategories.map(category => (
-              <button 
-                key={category} 
-                className="category-item" 
-                onClick={() => handleCategoryClick(category)}
-              >
+              <button key={category} className="category-item" onClick={() => handleCategoryClick(category)} >
                 {category.toUpperCase()}
               </button>
             ))}

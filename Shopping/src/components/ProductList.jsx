@@ -8,13 +8,7 @@ import ErrorFallback from './ErrorFallback';
 import '../styles/ProductList.css';
 
 function ProductList() {
-  const { 
-    products, 
-    loading, 
-    error, 
-    pagination, 
-    fetchProducts 
-  } = useProducts();
+  const { products, loading, error, pagination, fetchProducts } = useProducts();
   const { addToCart } = useCart();
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -22,23 +16,20 @@ function ProductList() {
     fetchProducts(currentPage);
   }, [currentPage]);
 
-  if (loading) {
-    return <div className="loading">Loading products...</div>;
-  }
-
-  if (error) {
-    return <div className="error">Error: {error}</div>;
-  }
+  if (loading) return <div className="loading">Loading products...</div>;
+  if (error) return <div className="error">Error: {error}</div>;
 
   return (
     <div className="product-list-container">
       <h2 className="product-list-title">PRODUCTS</h2>
-      <div className="product-grid">
-        {products.map((product) => (
-          <ErrorBoundary key={product.id} FallbackComponent={ErrorFallback}>
-            <ProductCard product={product} onAddToCart={addToCart} />
-          </ErrorBoundary>
-        ))}
+      <div className="product-grid-wrapper">
+        <div className="product-grid">
+          {products.map((product) => (
+            <ErrorBoundary key={product.id} FallbackComponent={ErrorFallback}>
+              <ProductCard product={product} onAddToCart={addToCart} />
+            </ErrorBoundary>
+          ))}
+        </div>
       </div>
       <Pagination 
         totalPosts={pagination.totalProducts} 
