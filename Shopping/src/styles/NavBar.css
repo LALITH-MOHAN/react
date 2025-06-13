@@ -1,90 +1,85 @@
 .navbar {
-    margin-bottom: 20px;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: bolder;
-  }
-  
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: bolder;
+  position: relative; /* Added to help dropdown anchor */
+  z-index: 1000;       /* Ensures navbar is above others */
+}
+
 .nav-link {
-    color: #333;
-    text-decoration: none;
-    padding: 5px 10px;
-    border-radius: 3px;
-    transition: background-color 0.2s;
-  }
-  
-  .nav-link:hover {
-    background-color: #0c0a0a;
-    color: #e0e0e0;
-  }
-  
-  .logout-btn {
-    margin-left: auto;
-    padding: 5px 10px;
-    cursor: pointer;
-    background: none;
-    border: none;
-    color: #333;
-    border-radius: 3px;
-    font-weight: bolder;
-  }
-  
-  .logout-btn:hover{
-    background-color: red;
-    color: white;
-  }
-  
-  .auth-links {
-    margin-left: auto;
-    display: flex;
-    gap: 10px;
-  }
+  color: #333;
+  text-decoration: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+}
 
-  #login:hover{
-    background-color: green;
-    color: #0c0a0a;
-    transform: scale(1.1);
-  }
+.nav-link:hover {
+  background-color: #0c0a0a;
+  color: #e0e0e0;
+}
 
-  #register:hover{
-    background-color: yellow;
-    color: #0c0a0a;
-    transform: scale(1.1);
-  }
-  #home:hover{
-    transform: scale(1.1);
-  }
-  #filter:hover{
-    transform: scale(1.1);
-  }
-  #cart:hover{
-    transform: scale(1.1);
-  }
-  #order:hover{
-    transform: scale(1.1);
-  }
-  #admin:hover{
-    transform: scale(1.1);
-  }
+.logout-btn {
+  margin-left: auto;
+  padding: 5px 10px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #333;
+  border-radius: 3px;
+  font-weight: bolder;
+}
 
-  .cart-icon {
-    position: relative;
-  }
-  
-  .cart-count {
-    position: absolute;
-    top: -5px;
-    right: -10px;
-    background-color:#333;
-    color: white;
-    font-size: 12px;
-    padding: 2px 6px;
-    border-radius: 50%;
-  }
+.logout-btn:hover {
+  background-color: red;
+  color: white;
+}
+
+.auth-links {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+}
+
+#login:hover {
+  background-color: green;
+  color: #0c0a0a;
+  transform: scale(1.1);
+}
+
+#register:hover {
+  background-color: yellow;
+  color: #0c0a0a;
+  transform: scale(1.1);
+}
+
+#home:hover,
+#filter:hover,
+#cart:hover,
+#order:hover,
+#admin:hover {
+  transform: scale(1.1);
+}
+
+.cart-icon {
+  position: relative;
+}
+
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background-color: #333;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+}
 
 .filter-dropdown {
   position: relative;
@@ -115,9 +110,11 @@
   background-color: #f0f0f0;
   font-weight: bolder;
 }
+
 .filter-container {
   position: relative;
   display: inline-block;
+  z-index: 1001; /* Ensures filter button and dropdown are above others */
 }
 
 .categories-dropdown {
@@ -127,8 +124,8 @@
   background-color: white;
   border: 1px solid #ddd;
   border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 9999; /* High z-index to ensure it's on top */
   min-width: 200px;
 }
 
@@ -148,4 +145,10 @@
   color: white;
   font-weight: bolder;
   transform: scale(1.05);
+}
+
+.product-card, .product-list, .card-wrapper {
+  overflow: visible !important;
+  position: relative;
+  z-index: 1;
 }

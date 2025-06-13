@@ -88,14 +88,12 @@ function ProductCard({ product }) {
 
   return (
     <div className="product-card">
-      <img 
-        src={product.thumbnail || 'https://placehold.co/300x300?text=No+Image'} 
-        alt={product.title || 'Untitled Product'} 
-        className="product-image"
-        onError={(e) => {
-          e.target.src = 'https://placehold.co/300x300?text=No+Image';
-        }}
-      />
+      <div className="image-container">
+     <img src={product.thumbnail || 'https://placehold.co/600x400?text=No+Image'} alt={product.title || 'Untitled Product'} className="product-image"
+      onError={(e) => {
+      e.target.src = 'https://placehold.co/600x400?text=No+Image';
+      e.target.className = 'product-image placeholder-image';}}/>
+    </div>
       <h3 className="product-title">{product.title || 'Untitled Product'}</h3>
       <p className="product-price">${formatPrice(product.price)}</p>
       <p className="product-stock">Stock: {product.stock || 0}</p>
