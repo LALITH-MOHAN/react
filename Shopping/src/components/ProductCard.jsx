@@ -83,7 +83,7 @@ function ProductCard({ product }) {
 
   if (isEditing) {
     return (
-      <div className="product-card edit-mode">
+      <div className="product-form-container">
         <ProductForm 
           product={product} 
           onCancel={() => setIsEditing(false)}

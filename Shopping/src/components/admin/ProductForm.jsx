@@ -132,15 +132,7 @@ function ProductForm({ product = null, onCancel }) {
           After selecting, manually add the image to <code>/public/products/</code> as: 
           {formData.thumbnail ? ` ${formData.thumbnail.split('/').pop()}` : ' [filename]'}
         </small>
-        {formData.thumbnail && (
-          <div className="image-preview">
-            <img 
-              src={formData.thumbnail.startsWith('http') ? formData.thumbnail : 
-                   `http://localhost:3000${formData.thumbnail}`} 
-              alt="Preview" 
-            />
-          </div>
-        )}
+        
       </div>
 
       <div className="form-buttons">

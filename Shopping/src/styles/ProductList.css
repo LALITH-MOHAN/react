@@ -10,18 +10,21 @@
   margin-bottom: 20px;
   text-align: center;
 }
-
-.product-grid-wrapper {
-  display: flex;
-  justify-content: center;
-}
-
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   width: 100%;
   max-width: 1200px;
+  align-items: start; /* This ensures items align at the top */
+}
+
+.product-grid-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.product-grid > .product-form-container {
+  grid-column: 1 / -1;
 }
 
 /* Responsive Adjustments */

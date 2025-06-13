@@ -12,6 +12,22 @@
     box-sizing: border-box;
     position: relative;
 }
+.product-form-container {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-bottom: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  }
+  .product-card.edit-mode {
+    height: auto;
+    min-height: 400px;
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-bottom: 20px;
+  }
 
 /* Image Container */
 .product-image-container {
