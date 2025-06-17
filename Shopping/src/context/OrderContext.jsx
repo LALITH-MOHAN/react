@@ -1,15 +1,18 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+// src/context/OrderContext.jsx
+import { createContext, useContext, useState } from 'react';
 import { useAuth } from './AuthContext';
 
 const OrderContext = createContext();
 
 export function OrderProvider({ children }) {
   const [orders, setOrders] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
   const { user } = useAuth();
 
   const fetchOrders = async (page = 1) => {
-    if (!user) return;
-    
+    if (!user || isFetching) return;
+
+    setIsFetching(true);
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(`http://localhost:3000/api/orders?page=${page}`, {
@@ -17,9 +20,9 @@ export function OrderProvider({ children }) {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (!response.ok) throw new Error('Failed to fetch orders');
-      
+
       const data = await response.json();
       if (page === 1) {
         setOrders(data.orders);
@@ -29,18 +32,16 @@ export function OrderProvider({ children }) {
     } catch (error) {
       console.error('Error fetching orders:', error);
       setOrders([]);
+    } finally {
+      setIsFetching(false);
     }
   };
-
-  useEffect(() => {
-    fetchOrders();
-  }, [user]);
 
   const placeOrder = async (cartItems, userId) => {
     try {
       const token = localStorage.getItem('token');
       const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      
+
       const response = await fetch('http://localhost:3000/api/orders', {
         method: 'POST',
         headers: {
@@ -57,7 +58,7 @@ export function OrderProvider({ children }) {
 
       const data = await response.json();
       setOrders(data);
-      
+
       return data[0];
     } catch (error) {
       console.error('Error placing order:', error);

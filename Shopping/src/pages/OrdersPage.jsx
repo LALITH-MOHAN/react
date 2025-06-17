@@ -1,3 +1,4 @@
+// src/pages/OrdersPage.jsx
 import { useState, useEffect } from 'react';
 import { useOrders } from '../context/OrderContext';
 import { useAuth } from '../context/AuthContext';
@@ -10,8 +11,10 @@ function OrdersPage() {
   const [loadingMore, setLoadingMore] = useState(false);
 
   useEffect(() => {
-    fetchOrders();
-  }, [fetchOrders]);
+    if (user && orders.length === 0) {
+      fetchOrders();
+    }
+  }, [user, orders.length, fetchOrders]);
 
   const userOrders = orders.filter(order => order.userId === user?.id)
     .sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -21,7 +24,6 @@ function OrdersPage() {
     setVisibleCount(prev => prev + 3);
     setTimeout(() => {
       setLoadingMore(false);
-      // Scroll to the newly loaded orders
       const orderCards = document.querySelectorAll('.order-card');
       if (orderCards.length > 0) {
         orderCards[orderCards.length - 1].scrollIntoView({ behavior: 'smooth' });
@@ -45,7 +47,7 @@ function OrdersPage() {
                   <p><strong>Date:</strong> {new Date(order.date).toLocaleString()}</p>
                   <p><strong>Total:</strong> ₹{order.total.toFixed(2)}</p>
                   <p><strong>Status:</strong> {order.status || 'OrderPlaced'}</p>
-                  
+
                   <div className="order-products">
                     <h4>Products Ordered:</h4>
                     {order.items.map((item, idx) => (
