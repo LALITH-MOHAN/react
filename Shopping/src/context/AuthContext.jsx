@@ -9,24 +9,20 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const verifyUser = async () => {
       try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          setLoading(false);
-          return;
-        }
-
-        const response = await fetch('http://localhost:3000/api/auth/me', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+        const response = await fetch('http://localhost:3000/auth/me', {
+          method: 'GET',
+          credentials: 'include'
         });
 
         if (response.ok) {
           const userData = await response.json();
-          setUser(userData);
+          setUser(userData.user);
+        } else {
+          setUser(null);
         }
       } catch (error) {
         console.error('Session verification failed:', error);
+        setUser(null);
       } finally {
         setLoading(false);
       }
@@ -37,21 +33,21 @@ export function AuthProvider({ children }) {
 
   const register = async (name, email, password) => {
     try {
-      const response = await fetch('http://localhost:3000/api/auth/register', {
+      const response = await fetch('http://localhost:3000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, email, password }),
+        credentials: 'include',
+        body: JSON.stringify({ user: { name, email, password, password_confirmation: password } }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Registration failed');
+        throw new Error(errorData.errors || 'Registration failed');
       }
 
       const data = await response.json();
-      localStorage.setItem('token', data.token);
       setUser(data.user);
       return true;
     } catch (error) {
@@ -62,12 +58,13 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
+      const response = await fetch('http://localhost:3000/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        credentials: 'include',
+        body: JSON.stringify({ user: { email, password } }),
       });
 
       if (!response.ok) {
@@ -76,7 +73,6 @@ export function AuthProvider({ children }) {
       }
 
       const data = await response.json();
-      localStorage.setItem('token', data.token);
       setUser(data.user);
       return true;
     } catch (error) {
@@ -85,9 +81,16 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setUser(null);
+  const logout = async () => {
+    try {
+      await fetch('http://localhost:3000/logout', {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      setUser(null);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   return (

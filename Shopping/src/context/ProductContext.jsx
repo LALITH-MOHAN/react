@@ -17,7 +17,9 @@ export function ProductProvider({ children }) {
 
   const fetchAllCategories = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/products/categories');
+      const response = await fetch('http://localhost:3000/products/categories', {
+        credentials: 'include'
+      });
       if (!response.ok) throw new Error('Failed to fetch categories');
       const data = await response.json();
       setAllCategories(data);
@@ -27,10 +29,12 @@ export function ProductProvider({ children }) {
     }
   }, []);
 
-  const fetchProducts = useCallback(async (page = 1) => { 
+  const fetchProducts = useCallback(async (page = 1) => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3000/api/products?page=${page}`); 
+      const response = await fetch(`http://localhost:3000/products?page=${page}`, {
+        credentials: 'include'
+      });
       if (!response.ok) throw new Error('Failed to fetch products');
       const data = await response.json();
       setProducts(data.products);
@@ -48,10 +52,12 @@ export function ProductProvider({ children }) {
     }
   }, []);
 
-  const fetchProductsByCategory = useCallback(async (category, page = 1) => { // Removed limit parameter
+  const fetchProductsByCategory = useCallback(async (category, page = 1) => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3000/api/products/category/${category}?page=${page}`); // Removed limit from URL
+      const response = await fetch(`http://localhost:3000/products/category/${category}?page=${page}`, {
+        credentials: 'include'
+      });
       if (!response.ok) throw new Error('Failed to fetch products by category');
       const data = await response.json();
       setProducts(data.products);
@@ -76,18 +82,17 @@ export function ProductProvider({ children }) {
 
   const addProduct = async (newProduct) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/products', {
+      const response = await fetch('http://localhost:3000/products', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newProduct)
+        credentials: 'include',
+        body: JSON.stringify({ product: newProduct })
       });
-      
+
       if (!response.ok) throw new Error('Failed to add product');
-      
+
       const product = await response.json();
       setProducts(prev => [...prev, product]);
       return true;
@@ -99,20 +104,19 @@ export function ProductProvider({ children }) {
 
   const updateProduct = async (id, updatedFields) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/api/products/${id}`, {
+      const response = await fetch(`http://localhost:3000/products/${id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(updatedFields)
+        credentials: 'include',
+        body: JSON.stringify({ product: updatedFields })
       });
-      
+
       if (!response.ok) throw new Error('Failed to update product');
-      
+
       const updatedProduct = await response.json();
-      setProducts(prev => 
+      setProducts(prev =>
         prev.map(product => product.id === id ? updatedProduct : product)
       );
       return true;
@@ -124,16 +128,13 @@ export function ProductProvider({ children }) {
 
   const deleteProduct = async (id) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/api/products/${id}`, {
+      const response = await fetch(`http://localhost:3000/products/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        credentials: 'include'
       });
-      
+
       if (!response.ok) throw new Error('Failed to delete product');
-      
+
       setProducts(prev => prev.filter(product => product.id !== id));
       return true;
     } catch (error) {
@@ -147,7 +148,7 @@ export function ProductProvider({ children }) {
   };
 
   return (
-    <ProductContext.Provider value={{ 
+    <ProductContext.Provider value={{
       products,
       loading,
       error,
