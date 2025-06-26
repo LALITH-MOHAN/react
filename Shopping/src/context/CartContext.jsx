@@ -11,15 +11,17 @@ export function CartProvider({ children }) {
     if (!user) return;
     
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/cart', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+      const response = await fetch('http://localhost:3000/cart', {
+        credentials: 'include'
       });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch cart');
+      }
+
       const data = await response.json();
       setCart(data.map(item => ({
-        id: item.product_id,
+        id: item.id,
         title: item.title,
         price: item.price,
         thumbnail: item.thumbnail,
@@ -35,20 +37,19 @@ export function CartProvider({ children }) {
     fetchCart();
   }, [user]);
 
-  const addToCart = async (product) => {
+  const addToCart = async (product, quantity = 1) => {
     if (!user) return false;
-
+  
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/cart', {
+      const response = await fetch('http://localhost:3000/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
+        credentials: 'include',
         body: JSON.stringify({
           productId: product.id,
-          quantity: 1
+          quantity: quantity // Pass the desired quantity
         })
       });
       
@@ -56,7 +57,7 @@ export function CartProvider({ children }) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to add to cart');
       }
-
+  
       await fetchCart();
       return true;
     } catch (error) {
@@ -64,40 +65,16 @@ export function CartProvider({ children }) {
       throw error;
     }
   };
-
-  const removeFromCart = async (id) => {
-    if (!user) return;
-
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/api/cart/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to remove from cart');
-      }
-
-      await fetchCart();
-    } catch (error) {
-      console.error('Error removing from cart:', error);
-    }
-  };
-
   const updateQuantity = async (id, newQuantity) => {
     if (!user || newQuantity < 1) return;
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/api/cart/${id}`, {
+      const response = await fetch(`http://localhost:3000/cart/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
+        credentials: 'include',
         body: JSON.stringify({ quantity: newQuantity })
       });
       
@@ -111,16 +88,32 @@ export function CartProvider({ children }) {
     }
   };
 
-  const clearCart = async (restoreStock = true) => {
+  const removeFromCart = async (id) => {
     if (!user) return;
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/cart', {
+      const response = await fetch(`http://localhost:3000/cart/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to remove from cart');
+      }
+
+      await fetchCart();
+    } catch (error) {
+      console.error('Error removing from cart:', error);
+    }
+  };
+
+  const clearCart = async () => {
+    if (!user) return;
+
+    try {
+      const response = await fetch('http://localhost:3000/cart', {
+        method: 'DELETE',
+        credentials: 'include'
       });
       
       if (!response.ok) {

@@ -41,7 +41,7 @@ function ProductCard({ product }) {
     setError(null);
     
     try {
-      const success = await addToCart(product);
+      const success = await addToCart(product, 1); // Explicitly pass quantity 1
       if (success) {
         setClicked(true);
         setTimeout(() => setClicked(false), 500);
@@ -52,7 +52,6 @@ function ProductCard({ product }) {
       setAdding(false);
     }
   };
-
   const handleDelete = () => setShowDeletePopup(true);
 
   const confirmDelete = async () => {
