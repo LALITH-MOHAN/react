@@ -1,4 +1,3 @@
-// src/context/OrderContext.jsx
 import { createContext, useContext, useState } from 'react';
 import { useAuth } from './AuthContext';
 
@@ -9,26 +8,19 @@ export function OrderProvider({ children }) {
   const [isFetching, setIsFetching] = useState(false);
   const { user } = useAuth();
 
-  const fetchOrders = async (page = 1) => {
+  const fetchOrders = async () => {
     if (!user || isFetching) return;
 
     setIsFetching(true);
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/api/orders?page=${page}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+      const response = await fetch('http://localhost:3000/orders', {
+        credentials: 'include'
       });
 
       if (!response.ok) throw new Error('Failed to fetch orders');
 
       const data = await response.json();
-      if (page === 1) {
-        setOrders(data.orders);
-      } else {
-        setOrders(prev => [...prev, ...data.orders]);
-      }
+      setOrders(data.orders);
     } catch (error) {
       console.error('Error fetching orders:', error);
       setOrders([]);
@@ -37,28 +29,24 @@ export function OrderProvider({ children }) {
     }
   };
 
-  const placeOrder = async (cartItems, userId) => {
+  const placeOrder = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-      const response = await fetch('http://localhost:3000/api/orders', {
+      const response = await fetch('http://localhost:3000/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({
-          items: cartItems,
-          total
-        })
+        credentials: 'include',
+        body: JSON.stringify({})
       });
 
-      if (!response.ok) throw new Error('Failed to place order');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to place order');
+      }
 
       const data = await response.json();
-      setOrders(data);
-
+      setOrders(prev => [data[0], ...prev]);
       return data[0];
     } catch (error) {
       console.error('Error placing order:', error);
@@ -67,7 +55,12 @@ export function OrderProvider({ children }) {
   };
 
   return (
-    <OrderContext.Provider value={{ orders, placeOrder, fetchOrders }}>
+    <OrderContext.Provider value={{ 
+      orders, 
+      placeOrder, 
+      fetchOrders,
+      isFetching 
+    }}>
       {children}
     </OrderContext.Provider>
   );
